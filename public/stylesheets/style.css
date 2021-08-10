@@ -5,3 +5,9 @@ body {
 a {
   color: #00b7ff;
 }
+.badge-link {
+  color: #fff;
+}
+a.badge-link:hover {
+  color: #000;
+}

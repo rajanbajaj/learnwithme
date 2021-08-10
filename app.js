@@ -23,6 +23,7 @@ app.use(stylus.middleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, '/node_modules/bootstrap/dist')));
 app.use(express.static(path.join(__dirname, '/node_modules/jquery/dist')));
+app.use(express.static(path.join(__dirname, '/node_modules/tinymce')));
 
 app.use('/', indexRouter);
 app.use('/api', apiRouter);

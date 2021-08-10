@@ -8,7 +8,8 @@ var memberSchema = new mongoose.Schema({
 	addressLine2: String,
 	country: {type: String, required: true},
 	state: String,
-	pincode: {type: Number, required: true}
+	pincode: {type: Number, required: true},
+	createdOn: {type: Date, "default": Date.now}
 });
 
 mongoose.model("Member", memberSchema);

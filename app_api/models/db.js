@@ -5,9 +5,9 @@ require('./posts');
 require('./members');
 
 var dbURI = 'mongodb://localhost/learnwithme';
-// if (process.env.NODE_ENV === 'production') {
-// 	dbURI = process.env.MONOGLAB_URI;
-// }
+if (process.env.NODE_ENV === 'production') {
+    dbURI = 'mongodb://127.0.0.1/learnwithme';
+}
 
 mongoose.connect(dbURI);
 
