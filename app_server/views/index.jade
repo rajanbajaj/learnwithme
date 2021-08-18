@@ -4,11 +4,11 @@ block content
   #nav-tab.nav.nav-tabs(role='tablist')
         button#nav-list-tab.nav-link.active(data-bs-toggle='tab', data-bs-target='#nav-list', type='button', role='tab', aria-controls='nav-list', aria-selected='true') Blog List
         button#nav-register-tab.nav-link(data-bs-toggle='tab', data-bs-target='#nav-register', type='button', role='tab', aria-controls='nav-register', aria-selected='false') Register
-        button#nav-edit-tab.nav-link(data-bs-toggle='tab', data-bs-target='#nav-edit', type='button', role='tab', aria-controls='nav-edit', aria-selected='false') Edit
+        //- button#nav-edit-tab.nav-link(data-bs-toggle='tab', data-bs-target='#nav-edit', type='button', role='tab', aria-controls='nav-edit', aria-selected='false') Edit
     #nav-tabContent.tab-content
       #nav-list.tab-pane.fade.show.active(role='tabpanel', aria-labelledby='nav-list-tab')
         .container-fluid.mt-5
-          each blog in data
+          each blog in data.results
             .card(style='width: 18rem;')
               img.card-img-top(src='...', alt='...')
               .card-body
@@ -19,6 +19,12 @@ block content
               span.m-1.badge.bg-success.round-pill 
                 a.badge-link(href='?keyword=#{tag}') #{tag}
             span #{blog.createdOn}
+          nav(aria-label='Page navigation')
+            ul.pagination
+              li.page-item
+                a.page-link(href=data._links.prev) Prev
+              li.page-item
+                a.page-link(href=data._links.next) Next
       #nav-register.tab-pane.fade(role='tabpanel', aria-labelledby='nav-register-tab')
         form(name='register_post', method='post', action='/register')
           .mb-3
@@ -38,27 +44,27 @@ block content
             input#postTags.form-control(type='text', name='postTags', placeholder='comma separated tags without space')
           .mb-3
             button(type="submit").btn.btn-success Register
-      #nav-edit.tab-pane.fade(role='tabpanel', aria-labelledby='nav-edit-tab')
-        form(name='edit_post', method='post', action='/edit')
-          .mb-3
-            label.form-label(for='postId') Title
-            select(name="postId", id="postId").form-control
-              each blog in data
-                option(value="#{blog._id}") #{blog.title}
-          .mb-3
-            label.form-label(for='postTitle') Title
-            input#postTitle.form-control(type='text', name='postTitle')
-          .mb-3
-            label.form-label(for='postAuthor') Author
-            input#postAuthor.form-control(type='text', name='postAuthor')    
-          .mb-3
-            label.form-label(for='postBody') Body
-            textarea#postBody.form-control(name='postBody', rows='3')
-          .mb-3
-            label.form-label(for='postRating') Rating
-            input#postRating.form-range(type='range', value=3, name='postRating', min=0, max=5, step=1, required)
-          .mb-3
-            label.form-label(for='postTags') Tags
-            input#postTags.form-control(type='text', name='postTags', placeholder='comma separated tags without space')
-          .mb-3
-            button(type="submit").btn.btn-success Register
+      //- #nav-edit.tab-pane.fade(role='tabpanel', aria-labelledby='nav-edit-tab')
+      //-   form(name='edit_post', method='post', action='/edit')
+      //-     .mb-3
+      //-       label.form-label(for='postId') Title
+      //-       select(name="postId", id="postId").form-control
+      //-         each blog in data
+      //-           option(value="#{blog._id}") #{blog.title}
+      //-     .mb-3
+      //-       label.form-label(for='postTitle') Title
+      //-       input#postTitle.form-control(type='text', name='postTitle')
+      //-     .mb-3
+      //-       label.form-label(for='postAuthor') Author
+      //-       input#postAuthor.form-control(type='text', name='postAuthor')    
+      //-     .mb-3
+      //-       label.form-label(for='postBody') Body
+      //-       textarea#postBody.form-control(name='postBody', rows='3')
+      //-     .mb-3
+      //-       label.form-label(for='postRating') Rating
+      //-       input#postRating.form-range(type='range', value=3, name='postRating', min=0, max=5, step=1, required)
+      //-     .mb-3
+      //-       label.form-label(for='postTags') Tags
+      //-       input#postTags.form-control(type='text', name='postTags', placeholder='comma separated tags without space')
+      //-     .mb-3
+      //-       button(type="submit").btn.btn-success Register

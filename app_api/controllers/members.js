@@ -1,4 +1,8 @@
-var mongoose = require('mongoose');
+// TODO: update password separately
+const mongoose = require('mongoose');
+const gravatar = require('gravatar');
+const argon2 = require('argon2');
+
 var member = mongoose.model('Member');
 
 var sendJsonResponse = function(res, status, content) { 
@@ -24,7 +28,16 @@ module.exports.membersReadOne = function (req, res) {
 };
 
 module.exports.membersList = function (req, res) { 
-	member.find().exec(function (err, data) {
+	var limit = req.query.limit ? Math.max(0, req.query.limit) : 10;
+	var start = req.query.start ? Math.max(0, req.query.start) : 0;
+	
+	member.find()
+	.skip(start)
+    .limit(limit)
+    .sort({
+        name: 'asc'
+    }).
+    exec(function (err, data) {
 		if (!data) {	// mongoose does not return data
 			sendJsonResponse(res, 404, {"message": "Members not found"});
 			return;
@@ -32,27 +45,47 @@ module.exports.membersList = function (req, res) {
 			sendJsonResponse(res, 404, err)
 			return;
 		}
-		sendJsonResponse(res, 200, data);
+
+		sendJsonResponse(res, 200, {
+			"_links": {
+				self: "/api/members?start=" + String(start) + "&limit=" + limit,
+				prev: "/api/members?start=" + (start-limit>=0 ? String((start-limit)) : "0") + "&limit=" + limit,
+				next: "/api/members?start="+String(start+limit) + "&limit=" + limit,
+			},
+			"limit": limit,
+			"size": data.length,
+			"start": start,
+			"results": data,
+		});
 	});
 };
 
 module.exports.membersCreate = function (req, res) {
-	member.create({
-		name: req.body.name,
-		username: req.body.username,
-		birthdate: req.body.birthdate,
-		addressLine1: req.body.addressLine1,
-		addressLine2: req.body.addressLine2,
-		country: req.body.country,
-		state: req.body.state,
-		pincode: req.body.pincode
-	}, function (err, data) {
-		if (err) {
-			sendJsonResponse(res, 400, err);
-		} else {
-			sendJsonResponse(res, 201, data);
-		}
-	});
+	if (req.body && req.body.password) {
+		argon2.hash(req.body.password).then(hashedPassword=> {
+			member.create({
+				name: req.body.name,
+				username: req.body.username,
+				email: req.body.email,
+				password: hashedPassword,
+				gravatar: gravatar.url(req.body.email, {protocol: 'https', s: '100'}),
+				birthdate: req.body.birthdate,
+				addressLine1: req.body.addressLine1,
+				addressLine2: req.body.addressLine2,
+				country: req.body.country,
+				state: req.body.state,
+				pincode: req.body.pincode
+			}, function (err, data) {
+				if (err) {
+					sendJsonResponse(res, 400, err);
+				} else {
+					sendJsonResponse(res, 201, data);
+				}
+			});
+		}).catch(err=>console.log(err));
+	} else {
+		sendJsonResponse(res, 400, {"message": "password field missing!"});
+	}
 };
 
 
@@ -70,6 +103,8 @@ module.exports.membersUpdateOne = function (req, res) {
 			// update attributes
 			data.name = req.body.name;
 			data.username = req.body.username;
+			data.email = req.body.email;
+			data.gravatar = gravatar.url(req.body.email, {protocol: 'https', s: '100'});
 			data.birthdate = req.body.birthdate;
 			data.addressLine1 = req.body.addressLine1;
 			data.addressLine2 = req.body.addressLine2;
