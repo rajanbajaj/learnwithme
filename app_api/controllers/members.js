@@ -2,6 +2,8 @@
 const mongoose = require('mongoose');
 const gravatar = require('gravatar');
 const argon2 = require('argon2');
+const logger = require('../../logger');
+// const client = require('../cache/redisDb');
 
 var member = mongoose.model('Member');
 
@@ -20,6 +22,10 @@ module.exports.membersReadOne = function (req, res) {
 				sendJsonResponse(res, 404, err);
 				return;
 			}
+
+			// cache member data for 3600 secs
+			// client.set(req.params.memberId, JSON.stringify(data.toJSON()), 'EX', 3600);
+			
 			sendJsonResponse(res, 200, data);
 		});
 	} else {
@@ -82,7 +88,7 @@ module.exports.membersCreate = function (req, res) {
 					sendJsonResponse(res, 201, data);
 				}
 			});
-		}).catch(err=>console.log(err));
+		}).catch(err=>logger.error(JSON.stringify(err)));
 	} else {
 		sendJsonResponse(res, 400, {"message": "password field missing!"});
 	}

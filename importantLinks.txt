@@ -1,0 +1,16 @@
+https://www.section.io/engineering-education/implementing-caching-in-nodejs-using-redis/#installing-redis
+
+// better example of redis caching
+https://codeburst.io/implement-caching-with-redis-in-express-js-and-mongodb-9aa09f9146ce
+
+https://www.weblearningblog.com/nodejs/how-to-use-redis-as-cache-for-mongodb-queries-in-nodejs/
+
+// mongoDB 1-to-N
+
+// embedding, child-referencing, and parent-referencing
+https://www.mongodb.com/blog/post/6-rules-of-thumb-for-mongodb-schema-design-part-1
+https://www.mongodb.com/blog/post/6-rules-of-thumb-for-mongodb-schema-design-part-2
+https://www.mongodb.com/blog/post/6-rules-of-thumb-for-mongodb-schema-design-part-3
+
+// utils structure
+https://stackoverflow.com/questions/30273993/best-way-to-structure-helpers-functions-in-nodejs

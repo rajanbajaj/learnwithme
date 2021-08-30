@@ -1,5 +1,10 @@
 var mongoose = require('mongoose');
+const logger = require('../../logger');
 var post = mongoose.model('Post');
+var comment = mongoose.model('Comment');
+var review = mongoose.model('Review');
+var like = mongoose.model('Like');
+// const client = require("../cache/redisDb");
 
 var sendJsonResponse = function(res, status, content) { 
  res.status(status); 
@@ -20,6 +25,10 @@ module.exports.postsReadOne = function (req, res) {
 				sendJsonResponse(res, 404, err);
 				return;
 			}
+
+			// cache member data for 3600 secs
+			// client.set(req.params.postId, JSON.stringify(data.toJSON()), 'EX', 3600);
+
 			sendJsonResponse(res, 200, data);
 		});
 	} else {
@@ -141,6 +150,9 @@ module.exports.postsDeleteOne = function (req, res) {
 				sendJsonResponse(res, 404, err);
 				return;
 			}
+
+			// TODO: delete related comments, reviews, and likes
+
 			sendJsonResponse(res, 204, null);
 		});
 	} else {
@@ -148,13 +160,12 @@ module.exports.postsDeleteOne = function (req, res) {
 	}
 };
 
-// read comments on post
 module.exports.readPostComment = function(req, res) {
 	var limit = req.query.limit ? Math.max(0, req.query.limit) : 10;
 	var start = req.query.start ? Math.max(0, req.query.start) : 0;
 
 	if (req.params && req.params.postId) {
-		post.findById(req.params.postId).exec(function (err, data) {
+		comment.find({post: req.params.postId}).exec(function (err, data) {
 			if (!data) { // mongoose does not return data
 				sendJsonResponse(res, 404, {"message": "postId not found"});
 				return;
@@ -170,9 +181,9 @@ module.exports.readPostComment = function(req, res) {
 					next: `/api/posts/${req.params.postId}/comments?start=` + String(start+limit) + "&limit=" + limit,
 				},
 				"limit": limit,
-				"size": data.comments.slice(start, start+limit).length,
+				"size": data.length,
 				"start": start,
-				results: data.comments.slice(start, start+limit),
+				results: data,
 			});
 		});
 	} else {
@@ -180,30 +191,18 @@ module.exports.readPostComment = function(req, res) {
 	}
 }
 
-// create comment on post
 module.exports.createPostComment = function(req, res) {
-	if (req.params && req.params.postId) {
-		post.findById(req.params.postId).exec(function (err, data) {
-			if (!data) { // mongoose does not return data
-				sendJsonResponse(res, 404, {"message": "postId not found"});
-				return;
-			} else if (err) {
-				sendJsonResponse(res, 404, err);
-				return;
+	if (req.body && req.params && req.params.postId && req.params.memberId && req.body.commentText) {
+		comment.create({
+			commentText: req.body.commentText,
+			author: req.params.memberId,
+			post: req.params.postId
+		}, function (err, data) {
+			if (err) {
+				sendJsonResponse(res, 400, err);
+			} else {
+				sendJsonResponse(res, 201, data);
 			}
-
-			// add comment to comments array
-			temp = data.comments.push({
-				author: req.body.author,
-				commentText: req.body.commentText,
-			});
-			data.save(function (err, data) {
-				if (err) {
-					sendJsonResponse(res, 404, err);
-				} else {
-					sendJsonResponse(res, 200, data);
-				}
-			});
 		});
 	} else {
 		sendJsonResponse(res, 404, "Unable to parse request params");
@@ -212,27 +211,17 @@ module.exports.createPostComment = function(req, res) {
 
 // update comment on post
 module.exports.updatePostComment = function(req, res) {
-	if (req.params && req.params.postId && req.params.commentId) {
-		post.findById(req.params.postId).exec(function (err, data) {
+	if (req.params && req.params.postId && req.params.commentId && req.body.commentText) {
+		comment.findById(req.params.commentId).exec(function (err, data) {
 			if (!data) { // mongoose does not return data
-				sendJsonResponse(res, 404, {"message": "postId not found"});
+				sendJsonResponse(res, 404, {"message": "commentId not found"});
 				return;
 			} else if (err) {
 				sendJsonResponse(res, 404, err);
 				return;
 			}
 
-			// add comment to comments array
-			comments = data.comments;
-			for (var i = comments.length - 1; i >= 0; i--) {
-				if (String(comments[i]._id) === req.params.commentId) {
-					comments[i] = {
-						author: comments[i].author,
-						commentText: req.body.commentText ? req.body.commentText : "",
-					};
-				}
-			}
-			data.comments = comments;
+			data.commentText = req.body.commentText;
 
 			data.save(function (err, data) {
 				if (err) {
@@ -250,34 +239,18 @@ module.exports.updatePostComment = function(req, res) {
 // delete comment on post
 module.exports.deletePostComment = function(req, res) {
 	if (req.params && req.params.postId && req.params.commentId) {
-		post.findById(req.params.postId).exec(function (err, data) {
-			if (!data) { // mongoose does not return data
-				sendJsonResponse(res, 404, {"message": "postId not found"});
-				return;
-			} else if (err) {
+		comment.findByIdAndRemove(req.params.commentId).exec(function (err, data) {
+			if (err) {
 				sendJsonResponse(res, 404, err);
 				return;
 			}
 
-			// add comment to comments array
-			comments = data.comments;
-			for (var i = comments.length - 1; i >= 0; i--) {
-				if (String(comments[i]._id) === req.params.commentId) {
-					comments.splice(i,1);
-				}
-			}
-			data.comments = comments;
+			// TODO: delete related replies, reviews, and likes
 
-			data.save(function (err, data) {
-				if (err) {
-					sendJsonResponse(res, 404, err);
-				} else {
-					sendJsonResponse(res, 200, data);
-				}
-			});
+			sendJsonResponse(res, 204, null);
 		});
 	} else {
-		sendJsonResponse(res, 404, "Unable to parse request params");
+		sendJsonResponse(res, 404, {"message": "postId not found in request"});
 	}
 }
 
@@ -286,12 +259,12 @@ module.exports.deletePostComment = function(req, res) {
 */
 
 // read reviews on post
-module.exports.readPostReviwes = function(req, res) {
+module.exports.readPostReviews = function(req, res) {
 	var limit = req.query.limit ? Math.max(0, req.query.limit) : 10;
 	var start = req.query.start ? Math.max(0, req.query.start) : 0;
 
 	if (req.params && req.params.postId) {
-		post.findById(req.params.postId).exec(function (err, data) {
+		review.find({post: req.params.postId}).exec(function (err, data) {
 			if (!data) { // mongoose does not return data
 				sendJsonResponse(res, 404, {"message": "postId not found"});
 				return;
@@ -307,9 +280,9 @@ module.exports.readPostReviwes = function(req, res) {
 					next: `/api/posts/${req.params.postId}/reviews?start=` + String(start+limit) + "&limit=" + limit,
 				},
 				"limit": limit,
-				"size": data.reviews.slice(start, start+limit).length,
+				"size": data.length,
 				"start": start,
-				results: data.reviews.slice(start, start+limit),
+				results: data,
 			});
 		});
 	} else {
@@ -319,29 +292,17 @@ module.exports.readPostReviwes = function(req, res) {
 
 // create review on post
 module.exports.createPostReview = function(req, res) {
-	if (req.params && req.params.postId) {
-		post.findById(req.params.postId).exec(function (err, data) {
-			if (!data) { // mongoose does not return data
-				sendJsonResponse(res, 404, {"message": "postId not found"});
-				return;
-			} else if (err) {
-				sendJsonResponse(res, 404, err);
-				return;
+	if (req.body && req.params && req.params.postId && req.params.memberId && req.body.reviewText) {
+		review.create({
+			reviewText: req.body.reviewText,
+			author: req.params.memberId,
+			post: req.params.postId
+		}, function (err, data) {
+			if (err) {
+				sendJsonResponse(res, 400, err);
+			} else {
+				sendJsonResponse(res, 201, data);
 			}
-
-			// add review to reviews array
-			temp = data.reviews.push({
-				author: req.body.author,
-				reviewText: req.body.commentText,
-				rating: req.body.rating,
-			});
-			data.save(function (err, data) {
-				if (err) {
-					sendJsonResponse(res, 404, err);
-				} else {
-					sendJsonResponse(res, 200, data);
-				}
-			});
 		});
 	} else {
 		sendJsonResponse(res, 404, "Unable to parse request params");
@@ -350,28 +311,17 @@ module.exports.createPostReview = function(req, res) {
 
 // update review on post
 module.exports.updatePostReview = function(req, res) {
-	if (req.params && req.params.postId && req.params.reviewId) {
-		post.findById(req.params.postId).exec(function (err, data) {
+	if (req.params && req.params.postId && req.params.reviewId && req.body.reviewText) {
+		review.findById(req.params.reviewId).exec(function (err, data) {
 			if (!data) { // mongoose does not return data
-				sendJsonResponse(res, 404, {"message": "postId not found"});
+				sendJsonResponse(res, 404, {"message": "reviewId not found"});
 				return;
 			} else if (err) {
 				sendJsonResponse(res, 404, err);
 				return;
 			}
 
-			// add review to reviews array
-			reviews = data.reviewText;
-			for (var i = reviews.length - 1; i >= 0; i--) {
-				if (String(reviews[i]._id) === req.params.reviewId) {
-					reviews[i] = {
-						author: reviews[i].author,
-						reviewText: req.body.reviewText ? req.body.reviewText : "",
-						rating: req.body.rating ? req.body.rating : "0",
-					};
-				}
-			}
-			data.reviews = reviews;
+			data.reviewText = req.body.reviewText;
 
 			data.save(function (err, data) {
 				if (err) {
@@ -389,33 +339,17 @@ module.exports.updatePostReview = function(req, res) {
 // delete review on post
 module.exports.deletePostReview = function(req, res) {
 	if (req.params && req.params.postId && req.params.reviewId) {
-		post.findById(req.params.postId).exec(function (err, data) {
-			if (!data) { // mongoose does not return data
-				sendJsonResponse(res, 404, {"message": "postId not found"});
-				return;
-			} else if (err) {
+		review.findByIdAndRemove(req.params.reviewId).exec(function (err, data) {
+			if (err) {
 				sendJsonResponse(res, 404, err);
 				return;
 			}
 
-			// add review to reviews array
-			reviews = data.reviews;
-			for (var i = reviews.length - 1; i >= 0; i--) {
-				if (String(reviews[i]._id) === req.params.reviewId) {
-					reviews.splice(i,1);
-				}
-			}
-			data.reviews = reviews;
+			// TODO: delete likes
 
-			data.save(function (err, data) {
-				if (err) {
-					sendJsonResponse(res, 404, err);
-				} else {
-					sendJsonResponse(res, 200, data);
-				}
-			});
+			sendJsonResponse(res, 204, null);
 		});
 	} else {
-		sendJsonResponse(res, 404, "Unable to parse request params");
+		sendJsonResponse(res, 404, {"message": "postId not found in request"});
 	}
 }

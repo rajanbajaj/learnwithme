@@ -1,15 +1,17 @@
 var mongoose = require('mongoose');
 var readLine = require ("readline");
+const logger = require('../../logger');
 
 require('./posts');
 require('./members');
+require('./media');
 
 var dbURI = 'mongodb://localhost/learnwithme';
 if (process.env.NODE_ENV === 'production') {
-    dbURI = 'mongodb://127.0.0.1/learnwithme';
+    dbURI = 'mongodb+srv://admin:admin@lonewolf-x1.pn9g6.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
 }
 
-mongoose.connect(dbURI);
+mongoose.connect(dbURI, {useNewUrlParser: true, useUnifiedTopology: true});
 
 // catch SIGINT on windows
 if (process.platform === "win32"){
@@ -24,35 +26,11 @@ if (process.platform === "win32"){
 
 
 mongoose.connection.on('connected', function () { 
- console.log('Mongoose connected to ' + dbURI); 
+ logger.info('Mongoose connected to ' + dbURI); 
 }); 
 mongoose.connection.on('error',function (err) { 
- console.log('Mongoose connection error: ' + err); 
+ logger.error('Mongoose connection error: ' + err); 
 }); 
 mongoose.connection.on('disconnected', function () { 
- console.log('Mongoose disconnected'); 
-});
-
-var gracefulShutdown = function (msg, callback) { 
- mongoose.connection.close(function () { 
- console.log('Mongoose disconnected through ' + msg); 
- callback(); 
- });
-};
-
-// event listeners for terminating the application
-process.once('SIGUSR2', function () { 
- gracefulShutdown('nodemon restart', function () { 
- process.kill(process.pid, 'SIGUSR2'); 
- });
-});
-process.on('SIGINT', function () { 
- gracefulShutdown('app termination', function () { 
- process.exit(0); 
- });
-});
-process.on('SIGTERM', function() { 
- gracefulShutdown('Heroku app shutdown', function () { 
- process.exit(0); 
- });
+ logger.info('Mongoose disconnected'); 
 });
