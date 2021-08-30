@@ -6,10 +6,10 @@ require('./posts');
 require('./members');
 require('./media');
 
-var dbURI = 'mongodb://localhost/learnwithme';
-if (process.env.NODE_ENV === 'production') {
+// var dbURI = 'mongodb://localhost/learnwithme';
+// if (process.env.NODE_ENV === 'production') {
     dbURI = 'mongodb+srv://admin:admin@lonewolf-x1.pn9g6.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
-}
+// }
 
 mongoose.connect(dbURI, {useNewUrlParser: true, useUnifiedTopology: true});
 
