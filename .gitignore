@@ -48,3 +48,5 @@ storage
 assets
 *.log
 reports
+
+.nyc_ouutput

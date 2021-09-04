@@ -1,5 +1,5 @@
-var mediaUtils = require('./lib/media');
+const mediaUtils = require('./lib/media');
 
 module.exports = {
-	Media: mediaUtils,
-}
+  Media: mediaUtils,
+};

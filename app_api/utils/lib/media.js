@@ -1,9 +1,9 @@
-const base_dir = "storage";
+const baseDir = 'storage';
 
 module.exports = {
-	getFinalDirectoryPath:function(path) {
-        // note path should start with '/'
+  getFinalDirectoryPath: function(path) {
+    // note path should start with '/'
 
-		return base_dir + path;
-	}
-}
+    return baseDir + path;
+  },
+};

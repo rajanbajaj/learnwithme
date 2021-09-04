@@ -1,6 +1,6 @@
-var express = require('express');
-var router = express.Router();
-var mainController = require('../controllers/main');
+const express = require('express');
+const router = express.Router();
+const mainController = require('../controllers/main');
 
 router.get('/', mainController.index);
 router.get('/delete/:postId', mainController.deletePost);

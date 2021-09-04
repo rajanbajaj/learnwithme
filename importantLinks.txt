@@ -14,3 +14,9 @@ https://www.mongodb.com/blog/post/6-rules-of-thumb-for-mongodb-schema-design-par
 
 // utils structure
 https://stackoverflow.com/questions/30273993/best-way-to-structure-helpers-functions-in-nodejs
+
+// wsl export import windows 10
+https://superuser.com/questions/1550622/move-wsl2-file-system-to-another-drive#1550635
+
+// unit testing
+https://developer.ibm.com/tutorials/learn-nodejs-unit-testing-in-nodejs/

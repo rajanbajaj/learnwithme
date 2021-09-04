@@ -1,41 +1,41 @@
-var express = require('express');
-var router = express.Router();
-var postsController = require('../controllers/posts');
-var membersController = require('../controllers/members');
-var mediaController = require('../controllers/media');
-var bodyParser = require('body-parser');
+const express = require('express');
+const router = express.Router();
+const postsController = require('../controllers/posts');
+const membersController = require('../controllers/members');
+const mediaController = require('../controllers/media');
+// const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const MediaGroup = mongoose.model('MediaGroup');
 const multer = require('multer');
-const base_dir = "storage";
+const baseDir = 'storage';
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-  	var upload_path = null;
-  	if (req.body && req.body.mediaGroupId) {
-  		MediaGroup.findById(req.body.mediaGroupId)
-  		.exec(function (err, data) {
-			if (!data) { // mongoose does not return data
-				cb(new Error("OOPS! Uplaod failed!1"));
-				return;
-			} else if (err) { // mongoose returned error
-				cb(new Error("OOPS! Uplaod failed!1"));
-				return;
-			}
+  destination: function(req, file, cb) {
+    let uploadPath = null;
+    if (req.body && req.body.mediaGroupId) {
+      MediaGroup.findById(req.body.mediaGroupId)
+          .exec(function(err, data) {
+            if (!data) { // mongoose does not return data
+              cb(new Error('OOPS! Uplaod failed!1'));
+              return;
+            } else if (err) { // mongoose returned error
+              cb(new Error('OOPS! Uplaod failed!1'));
+              return;
+            }
 
-			upload_path = base_dir+data.path+data.name;
-			if (upload_path !== null) {
-	    		cb(null, upload_path);
-			} else {
-				cb(new Error("OOPS! Uplaod failed!1"));
-			}
-		});
-  	}else {
-		cb(new Error("OOPS! Uplaod failed!2"));
-  	}
-  }
-})
+            uploadPath = baseDir+data.path+data.name;
+            if (uploadPath !== null) {
+              cb(null, uploadPath);
+            } else {
+              cb(new Error('OOPS! Uplaod failed!1'));
+            }
+          });
+    } else {
+      cb(new Error('OOPS! Uplaod failed!2'));
+    }
+  },
+});
 
-const upload = multer({ storage: storage })
+const upload = multer({storage: storage});
 
 // posts
 router.get('/posts', postsController.postsList);
