@@ -6,14 +6,7 @@ require('./posts');
 require('./members');
 require('./media');
 
-let dbURI = 'mongodb://127.0.0.1/learnwithme';
-if (process.env.NODE_ENV === 'production') {
-  dbURI = 'mongodb+srv://admin:admin@lonewolf-x1.pn9g6.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
-}
-if (process.env.NODE_ENV === 'test') {
-  dbURI = 'mongodb://127.0.0.1/learnwithme';
-}
-
+let dbURI = process.env.DATABASE;
 mongoose.connect(dbURI, {useNewUrlParser: true, useUnifiedTopology: true});
 
 // catch SIGINT on windows

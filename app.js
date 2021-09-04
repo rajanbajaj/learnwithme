@@ -4,12 +4,17 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('./logger');
+const busboy = require('connect-busboy'); // middleware for form/file upload
+const mongoose = require('mongoose');
 // var morgan = require('morgan');
 // var stylus = require('stylus');
 // const bodyParser = require('body-parser');
-const busboy = require('connect-busboy'); // middleware for form/file upload
 // const client = require('./app_api/cache/redisDb');
-const mongoose = require('mongoose');
+
+if (!process.env.DATABASE) {
+  console.log("DB NOT DEFINED!");
+  exit(1);
+}
 
 require('./app_api/models/db');
 // const indexRouter = require('./app_server/routes/index');
@@ -20,9 +25,9 @@ const {graphqlHTTP} = require('express-graphql');
 // const {buildSchema} = require('graphql');
 
 const app = express();
-const server = app.listen(3000, function() {
-  logger.info('Server started @ 3000');
-});
+// const server = app.listen(3000, function() {
+//   logger.info('Server started @ 3000');
+// });
 
 // Construct a schema, using GraphQL schema language
 const schema = require('./app_api/graphQL/schema');

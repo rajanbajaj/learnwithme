@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node app.js",
+    "start-dev": "DOTENV_CONFIG_PATH=.env.development node -r dotenv/config app.js",
+    "start-prod": "DOTENV_CONFIG_PATH=.env node -r dotenv/config app.js",
+    "start": "DOTENV_CONFIG_PATH=.env.development node -r dotenv/config ./bin/www",
     "test": "nyc mocha ./app_api/test --exit",
     "lint": "eslint .",
     "lint-fix": "npm run lint -- --fix",
@@ -16,6 +18,7 @@
     "connect-busboy": "0.0.2",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
+    "dotenv": "^10.0.0",
     "express": "~4.16.1",
     "express-graphql": "^0.12.0",
     "fs-extra": "^10.0.0",
