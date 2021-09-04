@@ -8,21 +8,20 @@ const {describe, it} = require('mocha');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const server = require('../../app');
-// const Member = mongoose.model('Member');
 chai.should();
 
 
 chai.use(chaiHttp);
 
 // Our parent block
-describe('Members', () => {
+describe('Posts', () => {
   /*
     * Test the /GET route
     */
-  describe('/GET Member', () => {
-    it('it should GET all the Members', (done) => {
+  describe('/GET Post', () => {
+    it('it should GET all the Posts', (done) => {
       chai.request(server)
-          .get('/api/members')
+          .get('/api/posts')
           .end((err, res) => {
             res.should.have.status(200);
             res.body.should.be.a('object');
