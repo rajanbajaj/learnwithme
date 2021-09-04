@@ -241,11 +241,11 @@ module.exports.readMedia = function(req, res) {
 };
 
 module.exports.createMedia = function(req, res, next) {
-  if (req.file && req.body.mediaGroupId) {
+  if (req.file && req.params.mediaGroupId) {
     Media.create({
       filename: req.file.filename,
       originalname: req.file.originalname,
-      mediaGroup: req.body.mediaGroupId,
+      mediaGroup: req.params.mediaGroupId,
       encoding: req.file.encoding,
       mimetype: req.file.mimetype,
       size: req.file.size,
@@ -266,7 +266,7 @@ module.exports.createMedia = function(req, res, next) {
       }
     });
   } else {
-    sendJsonResponse(res, 400, {'message': 'Unable to parse params!'});
+    sendJsonResponse(res, 400, {'message': `Unable to parse params! :: ${req.params.mediaGroupId}`});
   }
 };
 

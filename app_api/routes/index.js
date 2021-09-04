@@ -11,8 +11,8 @@ const baseDir = 'storage';
 const storage = multer.diskStorage({
   destination: function(req, file, cb) {
     let uploadPath = null;
-    if (req.body && req.body.mediaGroupId) {
-      MediaGroup.findById(req.body.mediaGroupId)
+    if (req.params && req.params.mediaGroupId) {
+      MediaGroup.findById(req.params.mediaGroupId)
           .exec(function(err, data) {
             if (!data) { // mongoose does not return data
               cb(new Error('OOPS! Uplaod failed!1'));
@@ -33,6 +33,11 @@ const storage = multer.diskStorage({
       cb(new Error('OOPS! Uplaod failed!2'));
     }
   },
+
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+    cb(null, uniqueSuffix + "-" + file.originalname);
+  }
 });
 
 const upload = multer({storage: storage});
@@ -71,7 +76,7 @@ router.delete('/media-group/:mediaGroupId', mediaController.deleteMediaGroup);
 
 // media
 router.get('/media', mediaController.readMedia);
-router.post('/media', upload.single('file'), mediaController.createMedia);
+router.post('/:mediaGroupId/media', upload.single('file'), mediaController.createMedia);
 router.put('/media/:mediaId', mediaController.updateMedia);
 router.delete('/media/:mediaId', mediaController.deleteMedia);
 

@@ -6,7 +6,7 @@ const cookieParser = require('cookie-parser');
 const logger = require('./logger');
 const busboy = require('connect-busboy'); // middleware for form/file upload
 const mongoose = require('mongoose');
-// var morgan = require('morgan');
+var morgan = require('morgan');
 // var stylus = require('stylus');
 // const bodyParser = require('body-parser');
 // const client = require('./app_api/cache/redisDb');
@@ -43,12 +43,15 @@ app.use(busboy());
 app.set('views', path.join(__dirname, 'app_server', 'views'));
 app.set('view engine', 'jade');
 
-// app.use(morgan("combined", {stream: logger.stream}));
+app.use(morgan("combined", {stream: logger.stream}));
+// app.use(bodyParser.urlencoded({extended: false}));
+// app.use(bodyParser.json());
 app.use(express.json({limit: '50mb'}));
 app.use(express.urlencoded({limit: '50mb', extended: true, parameterLimit: 50000}));
 app.use(cookieParser());
 // app.use(stylus.middleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/static', express.static(path.join(__dirname, 'storage')));
 app.use(express.static(path.join(__dirname, '/node_modules/bootstrap/dist')));
 app.use(express.static(path.join(__dirname, '/node_modules/jquery/dist')));
 app.use(express.static(path.join(__dirname, '/node_modules/tinymce')));
