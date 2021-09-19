@@ -2,4 +2,4 @@
 
 start:
 DATABASE=mongodb://localhost/learnwithme nodemon -L
-server=http://localhost:3000
+SERVER=http://localhost:3000

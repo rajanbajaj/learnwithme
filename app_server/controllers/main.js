@@ -1,9 +1,9 @@
 const request = require('request');
 const fs = require('fs'); // File System - for file manipulation
 let apiOptions;
-if (process.env.server) {
+if (process.env.SERVER) {
   apiOptions = {      
-    server: process.env.server,
+    server: process.env.SERVER,
   };
 } else {
   apiOptions = {      
