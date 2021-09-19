@@ -1,9 +1,15 @@
 const request = require('request');
 const fs = require('fs'); // File System - for file manipulation
-
-const apiOptions = {
-  server: 'http://localhost:3000',
-};
+let apiOptions;
+if (process.env.server) {
+  apiOptions = {      
+    server: process.env.server,
+  };
+} else {
+  apiOptions = {      
+    server: 'http://localhost:3000',
+  };
+}
 
 /* GET home page. */
 module.exports.index = function(req, res, next) {

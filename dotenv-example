@@ -1,1 +1,2 @@
 DATABASE=mongodb://localhost/learnwithme
+server=http://localhost3000
