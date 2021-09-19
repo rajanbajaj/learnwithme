@@ -18,12 +18,19 @@ module.exports.index = function(req, res, next) {
     method: 'GET',
     json: {},
   };
-
   request(requestOptions, function(err, response, body) {
     if (err) {
       console.log(err);
     } else if (response.statusCode === 200) {
-      res.render('index', {data: body});
+      let error = null;
+      if(req.session && req.session.error) {
+        error = req.session.error;
+      }
+
+      // unset error
+      req.session.error = null;
+
+      res.render('index', {data: body, error: error});
     } else {
       console.log(response.statusCode);
     }
@@ -76,7 +83,8 @@ module.exports.registerPost = function(req, res, next) {
     } else if (response.statusCode === 201) {
       res.redirect('/');
     } else {
-      console.log(response.statusCode);
+      req.session.error = response.body && response.body.errors && response.body.message ? response.body.message : "An unexpected error occurred!";
+      res.redirect('/');
     }
   });
 };

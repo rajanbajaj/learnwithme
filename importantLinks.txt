@@ -20,3 +20,9 @@ https://superuser.com/questions/1550622/move-wsl2-file-system-to-another-drive#1
 
 // unit testing
 https://developer.ibm.com/tutorials/learn-nodejs-unit-testing-in-nodejs/
+
+// video rendering
+https://www.linode.com/docs/guides/build-react-video-streaming-app/
+
+// react concepts
+https://payalpaul2436.medium.com/10-main-core-concept-you-need-to-know-about-react-303e986e1763

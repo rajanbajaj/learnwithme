@@ -12,6 +12,34 @@ const sendJsonResponse = function(res, status, content) {
   res.json(content);
 };
 
+module.exports.countMedia = function(req, res) {
+  Media.countDocuments({}).exec(function(err, count) {
+    if (err) { // mongoose returned error
+      sendJsonResponse(res, 404, err);
+      return;
+    }
+
+    // cache member data for 3600 secs
+    // client.set(req.params.memberId, JSON.stringify(data.toJSON()), 'EX', 3600);
+
+    sendJsonResponse(res, 200, count);
+  });
+};
+
+module.exports.countMediaGroup = function(req, res) {
+  MediaGroup.count({}).exec(function(err, count) {
+    if (err) { // mongoose returned error
+      sendJsonResponse(res, 404, err);
+      return;
+    }
+
+    // cache member data for 3600 secs
+    // client.set(req.params.memberId, JSON.stringify(data.toJSON()), 'EX', 3600);
+
+    sendJsonResponse(res, 200, count);
+  });
+};
+
 module.exports.readMediaGroup = function(req, res) {
   const limit = req.query.limit ? Math.max(0, req.query.limit) : 10;
   const start = req.query.start ? Math.max(0, req.query.start) : 0;
@@ -24,7 +52,7 @@ module.exports.readMediaGroup = function(req, res) {
       })
       .exec(function(err, data) {
         if (!data) { // mongoose does not return data
-          sendJsonResponse(res, 404, {'message': 'Media not found'});
+          sendJsonResponse(res, 404, {'message': 'MediaGroup not found'});
           return;
         } else if (err) { // mongoose return error
           sendJsonResponse(res, 404, err);
@@ -381,36 +409,47 @@ module.exports.deleteMedia = function(req, res, next) {
         return;
       }
 
-      MediaGroup.findById(data.mediaGroup).exec(function(e, d) {
-        if (!d) { // mongoose does not return data
-          sendJsonResponse(res, 404, {'message': 'Media not found'});
-          return;
-        } else if (e) { // mongoose return error
-          sendJsonResponse(res, 404, e);
-          return;
-        }
-
-        filePath = mediaUtils.getFinalDirectoryPath(d.path + d.name);
-        filePath = path.join(filePath, data.filename);
-
-        data.findByIdAndRemove(req.params.mediaId).exec(function(err, data) {
-          if (err) {
-            sendJsonResponse(res, 404, err);
+      if (data.mediaGroup) {
+        MediaGroup.findById(data.mediaGroup).exec(function(e, d) {
+          if (!d) { // mongoose does not return data
+            sendJsonResponse(res, 404, {'message': 'Media not found'});
+            return;
+          } else if (e) { // mongoose return error
+            sendJsonResponse(res, 404, e);
             return;
           }
 
-          // delete media file from folder
-          fs.rm(filePath, {recursive: false}, (err) => {
+          filePath = mediaUtils.getFinalDirectoryPath(d.path + d.name);
+          filePath = path.join(filePath, data.filename);
+
+          Media.findByIdAndRemove(req.params.mediaId).exec(function(err, data) {
             if (err) {
-              logger.info(`${filePath} ERR! :: ` + JSON.stringify(err));
+              sendJsonResponse(res, 404, err);
+              return;
             }
-            logger.info(`${filePath} is deleted!`);
+
+            // delete media file from folder
+            fs.rm(filePath, {recursive: false}, (err) => {
+              if (err) {
+                logger.info(`${filePath} ERR! :: ` + JSON.stringify(err));
+              }
+              logger.info(`${filePath} is deleted!`);
+            });
+
+
+            sendJsonResponse(res, 204, null);
           });
-
-
-          sendJsonResponse(res, 204, null);
         });
-      });
+      } else {
+        // delete media entry from db
+        Media.findByIdAndRemove(req.params.mediaId).exec(function(err, data) {
+            if (err) {
+              sendJsonResponse(res, 404, err);
+              return;
+            }
+            sendJsonResponse(res, 204, null);
+          });
+      }
     });
   } else {
     sendJsonResponse(res, 400, {'message': 'Unable to parse params!'});

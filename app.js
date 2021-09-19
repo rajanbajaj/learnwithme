@@ -7,6 +7,9 @@ const logger = require('./logger');
 const busboy = require('connect-busboy'); // middleware for form/file upload
 const mongoose = require('mongoose');
 var morgan = require('morgan');
+var cors = require('cors');
+var session = require('express-session')
+
 // var stylus = require('stylus');
 // const bodyParser = require('body-parser');
 // const client = require('./app_api/cache/redisDb');
@@ -17,7 +20,7 @@ if (!process.env.DATABASE) {
 }
 
 require('./app_api/models/db');
-// const indexRouter = require('./app_server/routes/index');
+const indexRouter = require('./app_server/routes/index');
 const apiRouter = require('./app_api/routes/index');
 
 // graphQL integration
@@ -25,9 +28,6 @@ const {graphqlHTTP} = require('express-graphql');
 // const {buildSchema} = require('graphql');
 
 const app = express();
-// const server = app.listen(3000, function() {
-//   logger.info('Server started @ 3000');
-// });
 
 // Construct a schema, using GraphQL schema language
 const schema = require('./app_api/graphQL/schema');
@@ -38,14 +38,15 @@ app.use('/graphql', graphqlHTTP({
 }));
 
 app.use(busboy());
-
+app.use(cors());
 // view engine setup
 app.set('views', path.join(__dirname, 'app_server', 'views'));
 app.set('view engine', 'jade');
 
+// Use the session middleware
+app.use(session({ secret: 'fsla3&fkad(#', cookie: { maxAge: 60000 }}))
+
 app.use(morgan("combined", {stream: logger.stream}));
-// app.use(bodyParser.urlencoded({extended: false}));
-// app.use(bodyParser.json());
 app.use(express.json({limit: '50mb'}));
 app.use(express.urlencoded({limit: '50mb', extended: true, parameterLimit: 50000}));
 app.use(cookieParser());
@@ -56,7 +57,7 @@ app.use(express.static(path.join(__dirname, '/node_modules/bootstrap/dist')));
 app.use(express.static(path.join(__dirname, '/node_modules/jquery/dist')));
 app.use(express.static(path.join(__dirname, '/node_modules/tinymce')));
 
-// app.use('/', indexRouter);
+app.use('/', indexRouter);
 app.use('/api', apiRouter);
 
 // catch 404 and forward to error handler
@@ -125,11 +126,8 @@ const gracefulShutdown = function(msg, callback) {
     logger.info('Mongoose disconnected through ' + msg);
     // client.quit(function() {
     //   console.log('Redis client stopped');
-    //   callback();
     // });
-  });
-  server.close(function() {
-    logger.info('server stopped.');
+    callback();
   });
 };
 

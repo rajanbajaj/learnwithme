@@ -15,6 +15,42 @@ const onlyUnique = function(value, index, self) {
   return self.indexOf(value) === index;
 };
 
+module.exports.countPosts = function(req, res) {
+  post.countDocuments({}).exec(function(err, count) {
+    if (err) { // mongoose returned error
+      sendJsonResponse(res, 404, err);
+      return;
+    }
+
+    // cache member data for 3600 secs
+    // client.set(req.params.memberId, JSON.stringify(data.toJSON()), 'EX', 3600);
+
+    sendJsonResponse(res, 200, count);
+  });
+};
+
+// read latest post
+module.exports.readLatestPost = function(req, res) {
+  post.findOne({})
+  .sort({
+    createdAt: "desc"
+  })
+  .exec(function(err, data) {
+    if (!data) { // mongoose does not return data
+      sendJsonResponse(res, 404, {'message': 'postId not found'});
+      return;
+    } else if (err) { // mongoose returned error
+      sendJsonResponse(res, 404, err);
+      return;
+    }
+
+    // cache member data for 3600 secs
+    // client.set(req.params.postId, JSON.stringify(data.toJSON()), 'EX', 3600);
+
+    sendJsonResponse(res, 200, data);
+  });
+};
+
 module.exports.postsReadOne = function(req, res) {
   if (req.params && req.params.postId) {
     post.findById(req.params.postId).exec(function(err, data) {

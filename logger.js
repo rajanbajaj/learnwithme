@@ -19,10 +19,12 @@ const logger = winston.createLogger({
   exitOnError: false,
 });
 
-// Call exceptions.handle with a transport to handle exceptions
-logger.exceptions.handle(
-    new winston.transports.File({filename: 'exceptions.log'})
-);
+if (process.env.NODE_ENV === "production") {
+  // Call exceptions.handle with a transport to handle exceptions
+  logger.exceptions.handle(
+      new winston.transports.File({filename: 'exceptions.log'})
+  );
+}
 
 logger.stream = {
   write: (info) => {
@@ -36,7 +38,13 @@ logger.stream = {
 //
 if (process.env.NODE_ENV !== 'production') {
   logger.add(new winston.transports.Console({
-    format: winston.format.simple(),
+    format: winston.format.combine(
+      winston.format.timestamp(),
+      winston.format.printf(info => {
+        const formattedDate = info.timestamp.replace('T', ' ').replace('Z', '');
+        return `${formattedDate}|${process.env.npm_package_name}|${info.level}|${info.message}`.replace(/(\r\n|\n|\r)/gm, "")
+      }),
+   ),
   }));
 }
 

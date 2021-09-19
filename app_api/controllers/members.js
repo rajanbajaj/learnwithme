@@ -12,6 +12,20 @@ const sendJsonResponse = function(res, status, content) {
   res.json(content);
 };
 
+module.exports.countMembers = function(req, res) {
+  member.countDocuments({}).exec(function(err, count) {
+    if (err) { // mongoose returned error
+      sendJsonResponse(res, 404, err);
+      return;
+    }
+
+    // cache member data for 3600 secs
+    // client.set(req.params.memberId, JSON.stringify(data.toJSON()), 'EX', 3600);
+
+    sendJsonResponse(res, 200, count);
+  });
+};
+
 module.exports.membersReadOne = function(req, res) {
   if (req.params && req.params.memberId) {
     member.findById(req.params.memberId).exec(function(err, data) {

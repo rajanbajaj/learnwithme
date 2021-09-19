@@ -1,6 +1,6 @@
-const tinymce = tinymce;
-const jQuery = jQuery;
-const window = window;
+// const tinymce = tinymce;
+// const jQuery = jQuery;
+// const window = window;
 const useDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
 const getFiles = function() {
   jQuery.get('/getFiles', function(res) {
