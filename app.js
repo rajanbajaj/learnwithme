@@ -6,15 +6,16 @@ const cookieParser = require('cookie-parser');
 const logger = require('./logger');
 const busboy = require('connect-busboy'); // middleware for form/file upload
 const mongoose = require('mongoose');
-const morgan = require('morgan');
-const cors = require('cors');
-const session = require('express-session');
+var morgan = require('morgan');
+var cors = require('cors');
+var session = require('express-session')
+
 // var stylus = require('stylus');
 // const bodyParser = require('body-parser');
 // const client = require('./app_api/cache/redisDb');
 
 if (!process.env.DATABASE) {
-  console.log('DB NOT DEFINED!');
+  console.log("DB NOT DEFINED!");
   exit(1);
 }
 
@@ -37,9 +38,7 @@ app.use('/graphql', graphqlHTTP({
 }));
 
 app.use(busboy());
-app.use(cors({
-  origin: '*',
-}));
+app.use(cors());
 // view engine setup
 app.set('views', path.join(__dirname, 'app_server', 'views'));
 app.set('view engine', 'jade');
@@ -47,11 +46,10 @@ app.set('view engine', 'jade');
 // Use the session middleware
 app.use(session({ secret: 'fsla3&fkad(#', cookie: { maxAge: 60000 }}))
 
-app.use(morgan('combined', {stream: logger.stream}));
+app.use(morgan("combined", {stream: logger.stream}));
 app.use(express.json({limit: '50mb'}));
 app.use(express.urlencoded({limit: '50mb', extended: true, parameterLimit: 50000}));
 app.use(cookieParser());
-
 // app.use(stylus.middleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/static', express.static(path.join(__dirname, 'storage')));
