@@ -26,7 +26,7 @@ module.exports.login = (req, res) => {
     argon2.verify(data[0].password, password).then(() => {
       // password match
       const user = {email: email};
-      const accessToken = jwt.sign(user, process.env.ACESS_TOKEN_SECRET, {expiresIn: '24h'});
+      const accessToken = jwt.sign(user, process.env.ACESS_TOKEN_SECRET, {expiresIn: '1h'});
       res.json({accessToken: accessToken});
     }).catch(() => {
       sendJsonResponse(res, 401, {'message': 'Invalid Credntials cr'});
