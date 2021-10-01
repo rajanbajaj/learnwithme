@@ -1,0 +1,27 @@
+GET http://localhost:3000/api/posts
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJiYWphakBnbWFpbC5jb20iLCJpYXQiOjE2MzMxMDgyNjcsImV4cCI6MTYzMzE5NDY2N30.2r3i8mu9hI-LgQWRer_BigmXVyiTtGNvY7gl4UoSLfk
+####
+
+GET http://localhost:3000/api/members
+
+###
+POST http://localhost:3000/api/login
+Content-Type: application/json
+
+{
+    "email": "rajanbajajkota@gmail.com",
+    "password": "1234"
+}
+
+###
+POST http://localhost:3000/api/members
+Content-Type: application/json
+
+{
+    "name": "rajan",
+    "email": "rajanbajajkota@gmail.com",
+    "password": "1234",
+    "birthdate": "2020-11-16T04:25:03-05:00",
+    "pincode": "335804",
+    "country": "India"
+}
