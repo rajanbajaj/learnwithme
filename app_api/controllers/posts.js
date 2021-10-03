@@ -143,27 +143,23 @@ module.exports.postsList = function(req, res) {
 };
 
 module.exports.postsCreate = function(req, res) {
-  if (req.body && req.body.title && req.body.author && req.body.body && req.body.rating) {
-    post.create({
-      title: req.body.title,
-      publish_status: req.body.publish_status,
-      author: req.body.author,
-      body: req.body.body,
-      // TODO: automate summary part
-      summary: req.body.body,
-      rating: req.body.rating,
-      tags: req.body.tags.split(',').filter(onlyUnique),
-      // TODO: create tags based on content
-    }, function(err, data) {
-      if (err) {
-        sendJsonResponse(res, 400, err);
-      } else {
-        sendJsonResponse(res, 201, data);
-      }
-    });
-  } else {
-    sendJsonResponse(res, 404, 'Unable to parse request params');
-  }
+  post.create({
+    title: req.body.title,
+    publish_status: req.body.publish_status,
+    author: req.body.author,
+    body: req.body.body,
+    // TODO: automate summary part
+    summary: req.body.body,
+    rating: req.body.rating,
+    tags: req.body.tags.split(',').filter(onlyUnique),
+    // TODO: create tags based on content
+  }, function(err, data) {
+    if (err) {
+      sendJsonResponse(res, 400, err);
+    } else {
+      sendJsonResponse(res, 201, data);
+    }
+  });
 };
 
 module.exports.postsUpdateOne = function(req, res) {

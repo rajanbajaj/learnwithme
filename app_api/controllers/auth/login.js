@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const argon2 = require('argon2');
-const member = require('mongoose').model('Member');
+const {Member} = require('../../models/members');
 
 
 const sendJsonResponse = function(res, status, content) {
@@ -12,7 +12,7 @@ module.exports.login = (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
 
-  member.find({email: email}).exec(function(err, data) {
+  Member.find({email: email}).exec(function(err, data) {
     if (!data || data.length === 0) {
       // mongoose does not return data
       sendJsonResponse(res, 401, {'message': 'Invalid Credntials'});
@@ -23,13 +23,16 @@ module.exports.login = (req, res) => {
       return;
     }
 
-    argon2.verify(data[0].password, password).then(() => {
-      // password match
-      const user = {email: email};
-      const accessToken = jwt.sign(user, process.env.ACESS_TOKEN_SECRET, {expiresIn: '1h'});
-      res.json({accessToken: accessToken});
+    argon2.verify(data[0].password, password).then(value => {
+      if (value) {
+        const user = {email: email, id: data[0]._id};
+        const accessToken = jwt.sign(user, process.env.ACESS_TOKEN_SECRET, {expiresIn: '30m'});
+        res.json({accessToken: accessToken});
+      } else {
+        sendJsonResponse(res, 401, {'message': 'Invalid Credntials'});
+      }
     }).catch(() => {
-      sendJsonResponse(res, 401, {'message': 'Invalid Credntials cr'});
+      sendJsonResponse(res, 500, {'message': 'Server Error'});
       return;
     });
   });
