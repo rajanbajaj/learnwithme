@@ -4,7 +4,14 @@
 // 3. Test db caching layer
 const mongoose = require('mongoose');
 
+const bookmarkSchema = new mongoose.Schema({
+  post: {type: mongoose.Schema.Types.ObjectId, ref: 'Post'},
+  author: {type: mongoose.Schema.Types.ObjectId, ref: 'Member'},
+}, {
+  timestamps: true,
+});
 const likeSchema = new mongoose.Schema({
+  post: {type: mongoose.Schema.Types.ObjectId, ref: 'Post'},
   author: {type: mongoose.Schema.Types.ObjectId, ref: 'Member'},
 }, {
   timestamps: true,
@@ -32,13 +39,15 @@ const postSchema = new mongoose.Schema({
   publish_status: {type: String, default: 'DRAFT'},
   body: String,
   tags: [String],
+  banner: String,
   author: {type: mongoose.Schema.Types.ObjectId, ref: 'Member'},
   comments: [{type: mongoose.Schema.Types.ObjectId, ref: 'Comment'}],
 }, {
   timestamps: true,
 });
 
-mongoose.model('Post', postSchema);
-mongoose.model('Comment', commentSchema);
-mongoose.model('Review', reviewSchema);
-mongoose.model('Like', likeSchema);
+module.exports.Post = mongoose.model('Post', postSchema);
+module.exports.Comment = mongoose.model('Comment', commentSchema);
+module.exports.Review = mongoose.model('Review', reviewSchema);
+module.exports.Like = mongoose.model('Like', likeSchema);
+module.exports.Bookmark = mongoose.model('Bookmark', bookmarkSchema);

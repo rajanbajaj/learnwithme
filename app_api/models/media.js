@@ -50,5 +50,5 @@ const mediaSchema = new mongoose.Schema({
   timestamps: true,
 });
 
-mongoose.model('Media', mediaSchema);
-mongoose.model('MediaGroup', mediaGroupSchema);
+module.exports.Media = mongoose.model('Media', mediaSchema);
+module.exports.MediaGroup = mongoose.model('MediaGroup', mediaGroupSchema);
