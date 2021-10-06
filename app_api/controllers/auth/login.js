@@ -31,8 +31,8 @@ module.exports.login = (req, res) => {
       } else {
         sendJsonResponse(res, 401, {'message': 'Invalid Credntials'});
       }
-    }).catch(() => {
-      sendJsonResponse(res, 500, {'message': 'Server Error'});
+    }).catch((e) => {
+      sendJsonResponse(res, 500, {'message': 'Server Error', 'error': e});
       return;
     });
   });
