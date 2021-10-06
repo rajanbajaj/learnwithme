@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 const post = mongoose.model('Post');
 const comment = mongoose.model('Comment');
 const review = mongoose.model('Review');
-// const like = mongoose.model('Like');
+const Like = mongoose.model('Like');
+const Bookmark = mongoose.model('Bookmark');
 // const client = require("../cache/redisDb");
 
 const sendJsonResponse = function(res, status, content) {
@@ -32,23 +33,23 @@ module.exports.countPosts = function(req, res) {
 // read latest post
 module.exports.readLatestPost = function(req, res) {
   post.findOne({})
-  .sort({
-    createdAt: "desc"
-  })
-  .exec(function(err, data) {
-    if (!data) { // mongoose does not return data
-      sendJsonResponse(res, 404, {'message': 'postId not found'});
-      return;
-    } else if (err) { // mongoose returned error
-      sendJsonResponse(res, 404, err);
-      return;
-    }
+      .sort({
+        createdAt: 'desc',
+      })
+      .exec(function(err, data) {
+        if (!data) { // mongoose does not return data
+          sendJsonResponse(res, 404, {'message': 'postId not found'});
+          return;
+        } else if (err) { // mongoose returned error
+          sendJsonResponse(res, 404, err);
+          return;
+        }
 
-    // cache member data for 3600 secs
-    // client.set(req.params.postId, JSON.stringify(data.toJSON()), 'EX', 3600);
+        // cache member data for 3600 secs
+        // client.set(req.params.postId, JSON.stringify(data.toJSON()), 'EX', 3600);
 
-    sendJsonResponse(res, 200, data);
-  });
+        sendJsonResponse(res, 200, data);
+      });
 };
 
 module.exports.postsReadOne = function(req, res) {
@@ -143,27 +144,23 @@ module.exports.postsList = function(req, res) {
 };
 
 module.exports.postsCreate = function(req, res) {
-  if (req.body && req.body.title && req.body.author && req.body.body && req.body.rating) {
-    post.create({
-      title: req.body.title,
-      publish_status: req.body.publish_status,
-      author: req.body.author,
-      body: req.body.body,
-      // TODO: automate summary part
-      summary: req.body.body,
-      rating: req.body.rating,
-      tags: req.body.tags.split(',').filter(onlyUnique),
-      // TODO: create tags based on content
-    }, function(err, data) {
-      if (err) {
-        sendJsonResponse(res, 400, err);
-      } else {
-        sendJsonResponse(res, 201, data);
-      }
-    });
-  } else {
-    sendJsonResponse(res, 404, 'Unable to parse request params');
-  }
+  post.create({
+    title: req.body.title,
+    publish_status: req.body.publish_status,
+    author: req.body.author,
+    body: req.body.body,
+    // TODO: automate summary part
+    summary: req.body.body,
+    rating: req.body.rating,
+    tags: req.body.tags.split(',').filter(onlyUnique),
+    // TODO: create tags based on content
+  }, function(err, data) {
+    if (err) {
+      sendJsonResponse(res, 400, err);
+    } else {
+      sendJsonResponse(res, 201, data);
+    }
+  });
 };
 
 module.exports.postsUpdateOne = function(req, res) {
@@ -415,5 +412,150 @@ module.exports.deletePostReview = function(req, res) {
     });
   } else {
     sendJsonResponse(res, 404, {'message': 'postId not found in request'});
+  }
+};
+
+module.exports.readPostLikesCount = function(req, res) {
+  if (req.params && req.params.postId) {
+    Like.countDocuments({post: req.params.postId}).exec(function(err, count) {
+      if (err) { // mongoose returned error
+        sendJsonResponse(res, 404, err);
+        return;
+      }
+      sendJsonResponse(res, 200, count);
+    });
+  } else {
+    sendJsonResponse(res, 404, {'message': 'postId not found in request'});
+  }
+};
+
+module.exports.readPostLikesCountByMember = function(req, res) {
+  if (req.params && req.params.postId && req.params.memberId) {
+    Like.countDocuments({post: req.params.postId, author: req.params.memberId}).exec(function(err, count) {
+      if (err) { // mongoose returned error
+        sendJsonResponse(res, 404, err);
+        return;
+      }
+      sendJsonResponse(res, 200, count);
+    });
+  } else {
+    sendJsonResponse(res, 404, {'message': 'postId not found in request'});
+  }
+};
+
+module.exports.togglePostLikeByMember = function(req, res) {
+  if (req.params && req.params.postId && req.params.memberId) {
+    Like.find({post: req.params.postId, author: req.params.memberId}).exec(function(err, data) {
+      if (!data) { // mongoose does not return data
+        sendJsonResponse(res, 404, "Not Found");
+        return;
+      } else if (err) {
+        sendJsonResponse(res, 404, err);
+        return;
+      } else {
+        if (data.length === 0) {
+          // create
+          Like.create({
+            author: req.params.memberId,
+            post: req.params.postId,
+          }, function(err, data) {
+            if (err) {
+              sendJsonResponse(res, 400, err);
+            } else {
+              sendJsonResponse(res, 201, data);
+            }
+          });
+        } else {
+          // delete likes
+          const ids = [];
+          data.forEach((ele) => {
+            ids.push(ele._id);
+          });
+
+          Like.deleteMany({_id: {$in: ids}}, function(err) {
+            if (err) {
+              sendJsonResponse(res, 404, err);
+            } else {
+              sendJsonResponse(res, 204, null);
+            }
+          });
+        }
+      }
+    });
+  } else {
+    sendJsonResponse(res, 404, 'Unable to parse request params');
+  }
+};
+
+// bookmark
+module.exports.readPostBookmarksCount = function(req, res) {
+  if (req.params && req.params.postId) {
+    Bookmark.countDocuments({post: req.params.postId}).exec(function(err, count) {
+      if (err) { // mongoose returned error
+        sendJsonResponse(res, 404, err);
+        return;
+      }
+      sendJsonResponse(res, 200, count);
+    });
+  } else {
+    sendJsonResponse(res, 404, {'message': 'postId not found in request'});
+  }
+};
+
+module.exports.readPostBookmarksCountByMember = function(req, res) {
+  if (req.params && req.params.postId && req.params.memberId) {
+    Bookmark.countDocuments({post: req.params.postId, author: req.params.memberId}).exec(function(err, count) {
+      if (err) { // mongoose returned error
+        sendJsonResponse(res, 404, err);
+        return;
+      }
+      sendJsonResponse(res, 200, count);
+    });
+  } else {
+    sendJsonResponse(res, 404, {'message': 'postId not found in request'});
+  }
+};
+
+module.exports.togglePostBookmarkByMember = function(req, res) {
+  if (req.params && req.params.postId && req.params.memberId) {
+    Bookmark.find({post: req.params.postId, author: req.params.memberId}).exec(function(err, data) {
+      if (!data) { // mongoose does not return data
+        sendJsonResponse(res, 404, 'Not Found');
+        return;
+      } else if (err) {
+        sendJsonResponse(res, 404, err);
+        return;
+      } else {
+        if (data.length === 0) {
+          // create
+          Bookmark.create({
+            author: req.params.memberId,
+            post: req.params.postId,
+          }, function(err, data) {
+            if (err) {
+              sendJsonResponse(res, 400, err);
+            } else {
+              sendJsonResponse(res, 201, data);
+            }
+          });
+        } else {
+          // delete likes
+          const ids = [];
+          data.forEach((ele) => {
+            ids.push(ele._id);
+          });
+
+          Bookmark.deleteMany({_id: {$in: ids}}, function(err) {
+            if (err) {
+              sendJsonResponse(res, 404, err);
+            } else {
+              sendJsonResponse(res, 204, null);
+            }
+          });
+        }
+      }
+    });
+  } else {
+    sendJsonResponse(res, 404, 'Unable to parse request params');
   }
 };

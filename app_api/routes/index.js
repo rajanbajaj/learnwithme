@@ -59,6 +59,18 @@ router.post('/posts/:postId/comments/:memberId', postsController.createPostComme
 router.put('/posts/:postId/comments/:commentId', postsController.updatePostComment);
 router.delete('/posts/:postId/comments/:commentId', postsController.deletePostComment);
 
+// post likes
+router.get('/posts/:postId/likes/count', authenticate, postsController.readPostLikesCount);
+router.get('/posts/:postId/likes/:memberId/count', authenticate, postsController.readPostLikesCountByMember);
+router.post('/posts/:postId/likes/:memberId', authenticate, postsController.togglePostLikeByMember);
+//router.delete('/posts/:postId/comments/:commentId', authenticate, postsController.deletePostComment);
+
+// post bookmark
+router.get('/posts/:postId/bookmarks/count', authenticate, postsController.readPostBookmarksCount);
+router.get('/posts/:postId/bookmarks/:memberId/count', authenticate, postsController.readPostBookmarksCountByMember);
+router.post('/posts/:postId/bookmarks/:memberId', authenticate, postsController.togglePostBookmarkByMember);
+
+
 // post reviews
 router.get('/posts/:postId/reviews', postsController.readPostReviews);
 router.post('/posts/:postId/reviews/:memberId', postsController.createPostReview);
