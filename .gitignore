@@ -48,7 +48,7 @@ storage
 assets
 *.log
 reports
-.env
+*.env
 .env.*
 
 .nyc_ouutput
