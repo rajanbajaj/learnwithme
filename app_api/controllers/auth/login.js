@@ -25,7 +25,12 @@ module.exports.login = (req, res) => {
 
     argon2.verify(data[0].password, password).then(value => {
       if (value) {
-        const user = {email: email, id: data[0]._id};
+        const user = {
+          email: email, 
+          id: data[0]._id,
+          gravatar:  data[0].gravatar,
+          name:  data[0].name
+        };
         const accessToken = jwt.sign(user, process.env.ACESS_TOKEN_SECRET, {expiresIn: '24h'});
         res.json({accessToken: accessToken});
       } else {
