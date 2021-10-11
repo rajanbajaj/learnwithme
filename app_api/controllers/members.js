@@ -70,6 +70,7 @@ module.exports.membersList = function(req, res) {
 
         sendJsonResponse(res, 200, {
           '_links': {
+            base: req.headers.host,
             self: '/api/members?start=' + String(start) + '&limit=' + limit,
             prev: '/api/members?start=' + (start-limit>=0 ? String((start-limit)) : '0') + '&limit=' + limit,
             next: '/api/members?start='+String(start+limit) + '&limit=' + limit,

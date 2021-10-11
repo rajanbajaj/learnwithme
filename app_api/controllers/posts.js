@@ -99,6 +99,7 @@ module.exports.postsList = function(req, res) {
 
           sendJsonResponse(res, 200, {
             '_links': {
+              base: req.headers.host,
               self: '/api/posts?keyword='+req.query.keyword+'start=' + String(start) + '&limit=' + limit,
               prev: '/api/posts?keyword='+req.query.keyword+'start=' +
                     (start-limit>=0 ? String((start-limit)) : '0') + '&limit=' + limit,
@@ -130,6 +131,7 @@ module.exports.postsList = function(req, res) {
 
           sendJsonResponse(res, 200, {
             '_links': {
+              base: req.headers.host,
               self: '/api/posts?start=' + String(start) + '&limit=' + limit,
               prev: '/api/posts?start=' + (start-limit>=0 ? String((start-limit)) : '0') + '&limit=' + limit,
               next: '/api/posts?start=' + String(start+limit) + '&limit=' + limit,
@@ -228,6 +230,7 @@ module.exports.readPostComment = function(req, res) {
 
       sendJsonResponse(res, 200, {
         '_links': {
+          base: req.headers.host,
           self: `/api/posts/${req.params.postId}/comments?start=` +
                 String(start) +
                 '&limit=' + limit,
@@ -333,6 +336,7 @@ module.exports.readPostReviews = function(req, res) {
 
       sendJsonResponse(res, 200, {
         '_links': {
+          base: req.headers.host,
           self: `/api/posts/${req.params.postId}/reviews?start=` + String(start) + '&limit=' + limit,
           prev: `/api/posts/${req.params.postId}/reviews?start=` +
                 (start-limit>=0 ? String((start-limit)) : '0') +

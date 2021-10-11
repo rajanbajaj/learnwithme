@@ -14,7 +14,7 @@ const mediaGroupSchema = new mongoose.Schema({
   security: {
     type: {
       group: [mongoose.Schema.Types.ObjectId],
-      owner: {type: mongoose.Schema.Types.ObjectId, required: true},
+      owner: {type: mongoose.Schema.Types.ObjectId},
       // directory with 777 permissions
       permissions: {type: String, default: 'd777'},
     },

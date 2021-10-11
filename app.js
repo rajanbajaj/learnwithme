@@ -53,14 +53,14 @@ app.use(express.urlencoded({limit: '50mb', extended: true, parameterLimit: 50000
 app.use(cookieParser());
 
 // app.use(stylus.middleware(path.join(__dirname, 'public')));
-app.use(express.static(path.join(__dirname, 'public')));
-app.use('/static', express.static(path.join(__dirname, 'storage')));
-app.use(express.static(path.join(__dirname, '/node_modules/bootstrap/dist')));
-app.use(express.static(path.join(__dirname, '/node_modules/jquery/dist')));
-app.use(express.static(path.join(__dirname, '/node_modules/tinymce')));
+// app.use(express.static(path.join(__dirname, 'public')));
+// app.use(express.static(path.join(__dirname, '/node_modules/bootstrap/dist')));
+// app.use(express.static(path.join(__dirname, '/node_modules/jquery/dist')));
+// app.use(express.static(path.join(__dirname, '/node_modules/tinymce')));
 
-app.use('/', indexRouter);
+// app.use('/', indexRouter);
 app.use('/api', apiRouter);
+app.use(express.static(path.join(__dirname, '/storage')));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
