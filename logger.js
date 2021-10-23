@@ -44,7 +44,7 @@ if (process.env.NODE_ENV !== 'production') {
         const formattedDate = info.timestamp.replace('T', ' ').replace('Z', '');
         return `${formattedDate}|${process.env.npm_package_name}|${info.level}|${info.message}`.replace(/(\r\n|\n|\r)/gm, "")
       }),
-   ),
+    ),
   }));
 }
 
