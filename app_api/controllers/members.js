@@ -50,8 +50,8 @@ module.exports.membersReadOne = function(req, res) {
 module.exports.membersList = function(req, res) {
   const limit = req.query.limit ? Math.max(0, req.query.limit) : 10;
   const start = req.query.start ? Math.max(0, req.query.start) : 0;
-
-  member.find()
+  let queryJSON = {profileType: 'PUBLIC'}
+  member.find(queryJSON)
       .skip(start)
       .limit(limit)
       .sort({
@@ -88,6 +88,7 @@ module.exports.membersCreate = function(req, res) {
     argon2.hash(req.body.password).then((hashedPassword)=> {
       member.create({
         name: req.body.name,
+        profileType: req.body.profileType,
         username: req.body.username,
         email: req.body.email,
         password: hashedPassword,

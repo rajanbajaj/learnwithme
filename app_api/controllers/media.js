@@ -43,8 +43,10 @@ module.exports.countMediaGroup = function(req, res) {
 module.exports.readMediaGroup = function(req, res) {
   const limit = req.query.limit ? Math.max(0, req.query.limit) : 10;
   const start = req.query.start ? Math.max(0, req.query.start) : 0;
+  const ownerId = req.user && req.user.id ? req.user.id : null;
+  const queryJSON = ownerId ? {'security.owner': ownerId} : {};
 
-  MediaGroup.find()
+  MediaGroup.find(queryJSON)
       .skip(start)
       .limit(limit)
       .sort({
@@ -94,7 +96,7 @@ module.exports.createMediaGroup = function(req, res, next) {
           },
           security: {
             group: [],
-            owner: req.body.owner ? req.body.owner : '',
+            owner: req.user && req.user.id ? req.user.id : '',
             permissions: 'd777',
           },
         }, function(err, data) {
@@ -240,8 +242,10 @@ module.exports.deleteMediaGroup = function(req, res, next) {
 module.exports.readMedia = function(req, res) {
   const limit = req.query.limit ? Math.max(0, req.query.limit) : 10;
   const start = req.query.start ? Math.max(0, req.query.start) : 0;
+  const ownerId = req.user && req.user.id ? req.user.id : null;
+  const queryJSON = ownerId ? {'security.owner': ownerId} : {};
 
-  Media.find()
+  Media.find(queryJSON)
       .skip(start)
       .limit(limit)
       .sort({
@@ -351,7 +355,7 @@ module.exports.createMedia = function(req, res, next) {
       },
       security: {
         group: [],
-        owner: '',
+        owner: req.user && req.user.id ? req.user.id : '',
         permissions: '-777',
       },
     }, function(err, data) {
