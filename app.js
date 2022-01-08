@@ -21,6 +21,7 @@ if (!process.env.DATABASE) {
 
 require('./app_api/models/db');
 const apiRouter = require('./app_api/routes/index');
+const analyticsRouter = require('./app_api/routes/analytics');
 
 // graphQL integration
 const {graphqlHTTP} = require('express-graphql');
@@ -60,6 +61,7 @@ app.use(cookieParser());
 
 // app.use('/', indexRouter);
 app.use('/api', apiRouter);
+app.use('/stats', analyticsRouter);
 app.use(express.static(path.join(__dirname, '/storage')));
 
 // catch 404 and forward to error handler

@@ -507,8 +507,6 @@ module.exports.deleteMedia = function(req, res, next) {
               }
               logger.info(`${filePath} is deleted!`);
             });
-
-
             sendJsonResponse(res, 204, null);
           });
         });

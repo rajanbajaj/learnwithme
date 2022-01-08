@@ -4,9 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "nodemon server",
-    "start-dev": "Set DOTENV_CONFIG_PATH=.env.development&node -r dotenv/config ./bin/www",
-    "start-prod": "Set DOTENV_CONFIG_PATH=.env&node -r dotenv/config ./bin/www",
-    "start": "Set DOTENV_CONFIG_PATH=.env&node -r dotenv/config ./bin/www",
+    "start-dev": "set DOTENV_CONFIG_PATH=.env.development&& node -r dotenv/config ./bin/www",
+    "start-prod": "set DOTENV_CONFIG_PATH=.env&& node -r dotenv/config ./bin/www",
+    "start": "set DOTENV_CONFIG_PATH=.env&& node -r dotenv/config ./bin/www",
     "test": "nyc mocha ./app_api/test --exit",
     "lint": "eslint .",
     "lint-fix": "npm run lint -- --fix",
@@ -41,7 +41,8 @@
     "request": "^2.88.2",
     "stylus": "0.54.5",
     "tinymce": "^5.10.0",
-    "winston": "^3.3.3"
+    "winston": "^3.3.3",
+    "ws": "^8.4.0"
   },
   "devDependencies": {
     "chai": "^4.3.4",

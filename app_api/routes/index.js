@@ -91,6 +91,7 @@ router.delete('/members/:memberId', authenticate, membersController.membersDelet
 // mediaGroup
 router.get('/media-groups/count', authenticate, mediaController.countMediaGroup);
 router.get('/media-groups', authenticate, mediaController.readMediaGroup);
+//TODO: create route for media group by id
 router.post('/media-groups', authenticate, mediaController.createMediaGroup);
 router.put('/media-groups/:mediaGroupId', authenticate, mediaController.updateMediaGroup);
 router.delete('/media-groups/:mediaGroupId', authenticate, mediaController.deleteMediaGroup);
