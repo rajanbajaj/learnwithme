@@ -18,7 +18,9 @@ const onlyUnique = function(value, index, self) {
 
 module.exports.countPosts = function(req, res) {
   const keyword = req.query && req.query.keyword ? req.query.keyword : null;
-  const status = req.query && req.query.status ? req.query.status : null;
+  let status = req.query && req.query.status ? req.query.status : null;
+  const user_id = req.query && req.query.user_id ? req.query.user_id : '';
+
   let queryJSON = {};
   // let linkBase = '/api/posts?';
 
@@ -27,14 +29,19 @@ module.exports.countPosts = function(req, res) {
     // linkBase = linkBase+`keyword=${keyword}&`;
   }
 
-  if (status) {
-    queryJSON.publish_status = status;
-    if (status !== 'PUBLIC') {
-      queryJSON.id = req.user.id;
+  if (user_id === '') {
+    if (status.match('PUBLIC_RESTRICTED')) {
+      queryJSON.publish_status = { $in: ["PUBLIC", "PUBLIC_RESTRICTED"] };      
+    } else {
+      queryJSON.publish_status = "PUBLIC";      
     }
-    // linkBase = linkBase+"status="+status+"&";
   } else {
-    queryJSON.publish_status = 'PUBLIC';
+    queryJSON.author = user_id;
+    if (status) {
+      queryJSON.publish_status = { $in: status.split(',') };
+    } else {
+      queryJSON.publish_status = { $in: ["PUBLIC", "PUBLIC_RESTRICTED", "PRIVATE", "DRAFT"] }; 
+    } 
   }
 
   post.countDocuments(queryJSON).exec(function(err, count) {
@@ -97,7 +104,9 @@ module.exports.postsList = function(req, res) {
   const limit = req.query.limit ? Math.max(0, req.query.limit) : 10;
   const start = req.query.start ? Math.max(0, req.query.start) : 0;
   const keyword = req.query && req.query.keyword ? req.query.keyword : null;
-  const status = req.query && req.query.status ? req.query.status : null;
+  let status = req.query && req.query.status ? req.query.status : null;
+  const user_id = req.query && req.query.user_id ? req.query.user_id : '';
+
   let queryJSON = {};
   let linkBase = '/api/posts?';
 
@@ -106,22 +115,28 @@ module.exports.postsList = function(req, res) {
     linkBase = linkBase+`keyword=${keyword}&`;
   }
 
-  if (status) {
-    queryJSON.publish_status = status;
-    if (status !== 'PUBLIC') {
-      queryJSON.id = req.user.id;
+  if (user_id === '') {
+    if (status.match('PUBLIC_RESTRICTED')) {
+      queryJSON.publish_status = { $in: ["PUBLIC", "PUBLIC_RESTRICTED"] };      
+    } else {
+      queryJSON.publish_status = "PUBLIC";      
     }
-    linkBase = linkBase+"status="+status+"&";
   } else {
-    queryJSON.publish_status = 'PUBLIC';
+    queryJSON.author = user_id;
+    if (status) {
+      queryJSON.publish_status = { $in: status.split(',') };
+    } else {
+      queryJSON.publish_status = { $in: ["PUBLIC", "PUBLIC_RESTRICTED", "PRIVATE", "DRAFT"] }; 
+    } 
   }
 
+
   post.find(queryJSON)
-  .skip(start)
-  .limit(limit)
   .sort({
     updatedAt: 'desc',
   })
+  .skip(start)
+  .limit(limit)
   .exec(function(err, data) {
     if (!data) {
       // mongoose does not return data
@@ -179,21 +194,25 @@ module.exports.postsUpdateOne = function(req, res) {
         return;
       }
 
-      // update attributes
-      data.title = req.body.title;
-      data.author = req.body.author;
-      data.body = req.body.body;
-      data.summary = req.body.body;
-      // TODO: automate summary part
-      data.rating = req.body.rating;
-      data.tags = req.body.tags.split(',').filter(onlyUnique);
-      data.save(function(err, data) {
-        if (err) {
-          sendJsonResponse(res, 404, err);
-        } else {
-          sendJsonResponse(res, 200, data);
-        }
-      });
+      if (data.author == req.body.author) {
+        // update attributes
+        data.title = req.body.title;
+        data.body = req.body.body;
+        data.summary = req.body.body;
+        data.publish_status = req.body.publish_status;
+        // TODO: automate summary part
+        data.rating = req.body.rating;
+        data.tags = req.body.tags.split(',').filter(onlyUnique);
+        data.save(function(err, data) {
+          if (err) {
+            sendJsonResponse(res, 404, err);
+          } else {
+            sendJsonResponse(res, 200, data);
+          }
+        });        
+      } else {
+        sendJsonResponse(res, 401, "Unauthorized access!");
+      }
     });
   } else {
     sendJsonResponse(res, 404, {'message': 'postId not found in request'});

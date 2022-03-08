@@ -103,6 +103,7 @@ router.get('/:mediaGroupId/media', authenticate, mediaController.readMediaByMedi
 router.post('/:mediaGroupId/media', authenticate, upload.single('file'), mediaController.createMedia);
 router.put('/media/:mediaId', authenticate, mediaController.updateMedia);
 router.delete('/media/:mediaId', authenticate, mediaController.deleteMedia);
+router.get('/rg/:mediaGroupId/media', mediaController.readMediaByMediaGroupId);
 
 // authentication
 router.post('/login', loginController.login);
