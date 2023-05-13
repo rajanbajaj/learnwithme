@@ -26,7 +26,7 @@ const storage = multer.diskStorage({
               return;
             }
 
-            uploadPath = baseDir+data.path+data.name;
+            uploadPath = `${baseDir}${data.path}${data.name}`;
             if (uploadPath !== null) {
               cb(null, uploadPath);
             } else {
@@ -39,8 +39,8 @@ const storage = multer.diskStorage({
   },
 
   filename: function(req, file, cb) {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, uniqueSuffix + '-' + file.originalname);
+    const uniqueSuffix = Date.now() + '_' + Math.round(Math.random() * 1E9);
+    cb(null, uniqueSuffix + '_' + file.originalname.replace(' ', '_'));
   },
 });
 
@@ -89,18 +89,21 @@ router.put('/members/:memberId', authenticate, membersController.membersUpdateOn
 router.delete('/members/:memberId', authenticate, membersController.membersDeleteOne);
 
 // mediaGroup
-router.get('/media-group/count', authenticate, mediaController.countMediaGroup);
-router.get('/media-group', authenticate, mediaController.readMediaGroup);
-router.post('/media-group', authenticate, mediaController.createMediaGroup);
-router.put('/media-group/:mediaGroupId', authenticate, mediaController.updateMediaGroup);
-router.delete('/media-group/:mediaGroupId', authenticate, mediaController.deleteMediaGroup);
+router.get('/media-groups/count', authenticate, mediaController.countMediaGroup);
+router.get('/media-groups', authenticate, mediaController.readMediaGroup);
+//TODO: create route for media group by id
+router.post('/media-groups', authenticate, mediaController.createMediaGroup);
+router.put('/media-groups/:mediaGroupId', authenticate, mediaController.updateMediaGroup);
+router.delete('/media-groups/:mediaGroupId', authenticate, mediaController.deleteMediaGroup);
 
 // media
 router.get('/media/count', authenticate, mediaController.countMedia);
 router.get('/media', authenticate, mediaController.readMedia);
+router.get('/:mediaGroupId/media', authenticate, mediaController.readMediaByMediaGroupId);
 router.post('/:mediaGroupId/media', authenticate, upload.single('file'), mediaController.createMedia);
 router.put('/media/:mediaId', authenticate, mediaController.updateMedia);
 router.delete('/media/:mediaId', authenticate, mediaController.deleteMedia);
+router.get('/rg/:mediaGroupId/media', mediaController.readMediaByMediaGroupId);
 
 // authentication
 router.post('/login', loginController.login);

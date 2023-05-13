@@ -17,7 +17,34 @@ const onlyUnique = function(value, index, self) {
 };
 
 module.exports.countPosts = function(req, res) {
-  post.countDocuments({}).exec(function(err, count) {
+  const keyword = req.query && req.query.keyword ? req.query.keyword : null;
+  let status = req.query && req.query.status ? req.query.status : null;
+  const user_id = req.query && req.query.user_id ? req.query.user_id : '';
+
+  let queryJSON = {};
+  // let linkBase = '/api/posts?';
+
+  if (keyword) {
+    queryJSON.tags = {$elemMatch: {$regex: keyword}};
+    // linkBase = linkBase+`keyword=${keyword}&`;
+  }
+
+  if (user_id === '') {
+    if (status.match('PUBLIC_RESTRICTED')) {
+      queryJSON.publish_status = { $in: ["PUBLIC", "PUBLIC_RESTRICTED"] };      
+    } else {
+      queryJSON.publish_status = "PUBLIC";      
+    }
+  } else {
+    queryJSON.author = user_id;
+    if (status) {
+      queryJSON.publish_status = { $in: status.split(',') };
+    } else {
+      queryJSON.publish_status = { $in: ["PUBLIC", "PUBLIC_RESTRICTED", "PRIVATE", "DRAFT"] }; 
+    } 
+  }
+
+  post.countDocuments(queryJSON).exec(function(err, count) {
     if (err) { // mongoose returned error
       sendJsonResponse(res, 404, err);
       return;
@@ -76,76 +103,69 @@ module.exports.postsReadOne = function(req, res) {
 module.exports.postsList = function(req, res) {
   const limit = req.query.limit ? Math.max(0, req.query.limit) : 10;
   const start = req.query.start ? Math.max(0, req.query.start) : 0;
+  const keyword = req.query && req.query.keyword ? req.query.keyword : null;
+  let status = req.query && req.query.status ? req.query.status : null;
+  const user_id = req.query && req.query.user_id ? req.query.user_id : '';
 
-  if (req.query && req.query.keyword) {
-    post.find({
-      tags: {$elemMatch: {$regex: req.query.keyword}},
-    })
-        .skip(start)
-        .limit(limit)
-        .sort({
-          title: 'asc',
-        })
-        .exec(function(err, data) {
-          if (!data) {
-            // mongoose does not return data
-            sendJsonResponse(res, 404, {'message': 'Posts not found'});
-            return;
-          } else if (err) {
-            // mongoose return error
-            sendJsonResponse(res, 404, err);
-            return;
-          }
+  let queryJSON = {};
+  let linkBase = '/api/posts?';
 
-          sendJsonResponse(res, 200, {
-            '_links': {
-              self: '/api/posts?keyword='+req.query.keyword+'start=' + String(start) + '&limit=' + limit,
-              prev: '/api/posts?keyword='+req.query.keyword+'start=' +
-                    (start-limit>=0 ? String((start-limit)) : '0') + '&limit=' + limit,
-              next: '/api/posts?keyword='+req.query.keyword+'start=' + String(start+limit) + '&limit=' + limit,
-            },
-            'limit': limit,
-            'size': data.length,
-            'start': start,
-            'results': data,
-          });
-        });
-  } else {
-    post.find()
-        .skip(start)
-        .limit(limit)
-        .sort({
-          title: 'asc',
-        })
-        .exec(function(err, data) {
-          if (!data) {
-            // mongoose does not return data
-            sendJsonResponse(res, 404, {'message': 'Posts not found'});
-            return;
-          } else if (err) {
-            // mongoose return error
-            sendJsonResponse(res, 404, err);
-            return;
-          }
-
-          sendJsonResponse(res, 200, {
-            '_links': {
-              self: '/api/posts?start=' + String(start) + '&limit=' + limit,
-              prev: '/api/posts?start=' + (start-limit>=0 ? String((start-limit)) : '0') + '&limit=' + limit,
-              next: '/api/posts?start=' + String(start+limit) + '&limit=' + limit,
-            },
-            'limit': limit,
-            'size': data.length,
-            'start': start,
-            'results': data,
-          });
-        });
+  if (keyword) {
+    queryJSON.tags = {$elemMatch: {$regex: keyword}};
+    linkBase = linkBase+`keyword=${keyword}&`;
   }
+
+  if (user_id === '') {
+    if (status.match('PUBLIC_RESTRICTED')) {
+      queryJSON.publish_status = { $in: ["PUBLIC", "PUBLIC_RESTRICTED"] };      
+    } else {
+      queryJSON.publish_status = "PUBLIC";      
+    }
+  } else {
+    queryJSON.author = user_id;
+    if (status) {
+      queryJSON.publish_status = { $in: status.split(',') };
+    } else {
+      queryJSON.publish_status = { $in: ["PUBLIC", "PUBLIC_RESTRICTED", "PRIVATE", "DRAFT"] }; 
+    } 
+  }
+
+
+  post.find(queryJSON)
+  .sort({
+    updatedAt: 'desc',
+  })
+  .skip(start)
+  .limit(limit)
+  .exec(function(err, data) {
+    if (!data) {
+      // mongoose does not return data
+      sendJsonResponse(res, 404, {'message': 'Posts not found'});
+      return;
+    } else if (err) {
+      // mongoose return error
+      sendJsonResponse(res, 404, err);
+      return;
+    }
+
+    sendJsonResponse(res, 200, {
+      '_links': {
+        base: req.headers.host,
+        self: linkBase+'start=' + String(start) + '&limit=' + limit,
+        prev: linkBase+'start=' + (start-limit>=0 ? String((start-limit)) : '0') + '&limit=' + limit,
+        next: linkBase+'start=' + String(start+limit) + '&limit=' + limit,
+      },
+      'limit': limit,
+      'size': data.length,
+      'start': start,
+      'results': data,
+    });
+  });
 };
 
 module.exports.postsCreate = function(req, res) {
   post.create({
-    title: req.body.title,
+    title: req.body.title && req.body.title.length > 0 ? req.body.title : 'Untitled '+(new Date()).toLocaleString(),
     publish_status: req.body.publish_status,
     author: req.body.author,
     body: req.body.body,
@@ -174,21 +194,25 @@ module.exports.postsUpdateOne = function(req, res) {
         return;
       }
 
-      // update attributes
-      data.title = req.body.title;
-      data.author = req.body.author;
-      data.body = req.body.body;
-      data.summary = req.body.body;
-      // TODO: automate summary part
-      data.rating = req.body.rating;
-      data.tags = req.body.tags.split(',').filter(onlyUnique);
-      data.save(function(err, data) {
-        if (err) {
-          sendJsonResponse(res, 404, err);
-        } else {
-          sendJsonResponse(res, 200, data);
-        }
-      });
+      if (data.author == req.body.author) {
+        // update attributes
+        data.title = req.body.title;
+        data.body = req.body.body;
+        data.summary = req.body.body;
+        data.publish_status = req.body.publish_status;
+        // TODO: automate summary part
+        data.rating = req.body.rating;
+        data.tags = req.body.tags.split(',').filter(onlyUnique);
+        data.save(function(err, data) {
+          if (err) {
+            sendJsonResponse(res, 404, err);
+          } else {
+            sendJsonResponse(res, 200, data);
+          }
+        });        
+      } else {
+        sendJsonResponse(res, 401, "Unauthorized access!");
+      }
     });
   } else {
     sendJsonResponse(res, 404, {'message': 'postId not found in request'});
@@ -228,6 +252,7 @@ module.exports.readPostComment = function(req, res) {
 
       sendJsonResponse(res, 200, {
         '_links': {
+          base: req.headers.host,
           self: `/api/posts/${req.params.postId}/comments?start=` +
                 String(start) +
                 '&limit=' + limit,
@@ -333,6 +358,7 @@ module.exports.readPostReviews = function(req, res) {
 
       sendJsonResponse(res, 200, {
         '_links': {
+          base: req.headers.host,
           self: `/api/posts/${req.params.postId}/reviews?start=` + String(start) + '&limit=' + limit,
           prev: `/api/posts/${req.params.postId}/reviews?start=` +
                 (start-limit>=0 ? String((start-limit)) : '0') +

@@ -35,7 +35,7 @@ const commentSchema = new mongoose.Schema({
 });
 
 const postSchema = new mongoose.Schema({
-  title: {type: String, required: true},
+  title: {type: String},
   publish_status: {type: String, default: 'DRAFT'},
   body: String,
   tags: [String],

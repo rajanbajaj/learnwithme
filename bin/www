@@ -23,6 +23,21 @@ app.set('port', port);
 var server = http.createServer(app);
 
 /**
+ * Websocket 
+ */
+// const WebSocket = require('ws');
+// const wss = new WebSocket.WebSocketServer({server})
+// wss.on('connection', function connection(ws) {
+//   console.log("A new client connection!")
+//   ws.send('Hello Client!');
+//   ws.on('message', function message(data) {
+//     console.log('received: %s', data);
+//     ws.send(`get your message: ${data}`);
+//   });
+
+// });
+
+/**
  * Listen on provided port, on all network interfaces.
  */
 

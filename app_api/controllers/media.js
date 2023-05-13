@@ -43,8 +43,10 @@ module.exports.countMediaGroup = function(req, res) {
 module.exports.readMediaGroup = function(req, res) {
   const limit = req.query.limit ? Math.max(0, req.query.limit) : 10;
   const start = req.query.start ? Math.max(0, req.query.start) : 0;
+  const ownerId = req.user && req.user.id ? req.user.id : null;
+  const queryJSON = ownerId ? {'security.owner': ownerId} : {};
 
-  MediaGroup.find()
+  MediaGroup.find(queryJSON)
       .skip(start)
       .limit(limit)
       .sort({
@@ -60,7 +62,9 @@ module.exports.readMediaGroup = function(req, res) {
         }
 
         sendJsonResponse(res, 200, {
+          '_expandable': [],
           '_links': {
+            base: req.headers.host,
             self: '/api/media-group?start=' + String(start) + '&limit=' + limit,
             prev: '/api/media-group?start=' + (start-limit>=0 ? String((start-limit)) : '0') + '&limit=' + limit,
             next: '/api/media-group?start=' + String(start+limit) + '&limit=' + limit,
@@ -92,7 +96,7 @@ module.exports.createMediaGroup = function(req, res, next) {
           },
           security: {
             group: [],
-            owner: '',
+            owner: req.user && req.user.id ? req.user.id : '',
             permissions: 'd777',
           },
         }, function(err, data) {
@@ -238,8 +242,10 @@ module.exports.deleteMediaGroup = function(req, res, next) {
 module.exports.readMedia = function(req, res) {
   const limit = req.query.limit ? Math.max(0, req.query.limit) : 10;
   const start = req.query.start ? Math.max(0, req.query.start) : 0;
+  const ownerId = req.user && req.user.id ? req.user.id : null;
+  const queryJSON = ownerId ? {'security.owner': ownerId} : {};
 
-  Media.find()
+  Media.find(queryJSON)
       .skip(start)
       .limit(limit)
       .sort({
@@ -255,7 +261,9 @@ module.exports.readMedia = function(req, res) {
         }
 
         sendJsonResponse(res, 200, {
+          '_expandable': [],
           '_links': {
+            base: req.headers.host,
             self: '/api/media?start=' + String(start) + '&limit=' + limit,
             prev: '/api/media?start=' + (start-limit>=0 ? String((start-limit)) : '0') + '&limit=' + limit,
             next: '/api/media?start=' + String(start+limit) + '&limit=' + limit,
@@ -266,6 +274,70 @@ module.exports.readMedia = function(req, res) {
           'results': data,
         });
       });
+};
+
+module.exports.readMediaByMediaGroupId = function(req, res) {
+  const limit = req.query.limit ? Math.max(0, req.query.limit) : 10;
+  const start = req.query.start ? Math.max(0, req.query.start) : 0;
+  const expand = req.query.expand ? req.query.expand.split(",") : [];
+
+  Media.find({mediaGroup: req.params.mediaGroupId})
+  .skip(start)
+  .limit(limit)
+  .sort({
+    updatedAt: 'desc',
+  })
+  .exec(function(err, data) {
+    if (!data) { // mongoose does not return data
+      sendJsonResponse(res, 404, {'message': 'Media not found'});
+      return;
+    } else if (err) { // mongoose return error
+      sendJsonResponse(res, 404, err);
+      return;
+    }
+    
+    MediaGroup.findById(req.params.mediaGroupId).exec(function(err, mediaGroupData) {
+      if (!data) { // mongoose does not return data
+        sendJsonResponse(res, 404, {'message': 'mediaGroupId not found'});
+        return;
+      } else if (err) { // mongoose returned error
+        sendJsonResponse(res, 404, err);
+        return;
+      }
+  
+      // cache member data for 3600 secs
+      // client.set(req.params.postId, JSON.stringify(data.toJSON()), 'EX', 3600);
+  
+      // embed links to media
+      for (let index = 0; index < data.length; index++) {
+        data[index] = { _embedded: `http://${req.headers.host}${mediaGroupData.path}${mediaGroupData.name}/${data[index].filename}`, ...(data[index].toJSON())};
+      }
+
+      let mediaGroupExpandIndex = expand.indexOf("mediaGroup");    
+      let payload = {
+        '_expandable': expand,
+        '_links': {
+          base: `http://${req.headers.host}`,
+          self: `http://${req.headers.host}/api/${req.params.mediaGroupId}/media?start=` + String(start) + '&limit=' + limit,
+          prev: `http://${req.headers.host}/api/${req.params.mediaGroupId}/media?start=` + (start-limit>=0 ? String((start-limit)) : '0') + '&limit=' + limit,
+          next: `http://${req.headers.host}/api/${req.params.mediaGroupId}/media?start=` + String(start+limit) + '&limit=' + limit,
+        },
+        'limit': limit,
+        'size': data.length,
+        'start': start,
+        'results': data,
+      }
+
+      // update expand array based on needs
+      if (mediaGroupExpandIndex !== -1) {
+        expand.splice(mediaGroupExpandIndex, 1);
+        payload._expandable = expand;
+        payload.mediaGroup = mediaGroupData;
+      }
+
+      sendJsonResponse(res, 200, payload);
+    });
+  });
 };
 
 module.exports.createMedia = function(req, res, next) {
@@ -283,7 +355,7 @@ module.exports.createMedia = function(req, res, next) {
       },
       security: {
         group: [],
-        owner: '',
+        owner: req.user && req.user.id ? req.user.id : '',
         permissions: '-777',
       },
     }, function(err, data) {
@@ -435,8 +507,6 @@ module.exports.deleteMedia = function(req, res, next) {
               }
               logger.info(`${filePath} is deleted!`);
             });
-
-
             sendJsonResponse(res, 204, null);
           });
         });

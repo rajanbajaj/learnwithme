@@ -9,6 +9,7 @@ const mongoose = require('mongoose');
 const morgan = require('morgan');
 const cors = require('cors');
 const session = require('express-session');
+require('dotenv').config();
 // var stylus = require('stylus');
 // const bodyParser = require('body-parser');
 // const client = require('./app_api/cache/redisDb');
@@ -19,8 +20,8 @@ if (!process.env.DATABASE) {
 }
 
 require('./app_api/models/db');
-const indexRouter = require('./app_server/routes/index');
 const apiRouter = require('./app_api/routes/index');
+const analyticsRouter = require('./app_api/routes/analytics');
 
 // graphQL integration
 const {graphqlHTTP} = require('express-graphql');
@@ -41,11 +42,11 @@ app.use(cors({
   origin: '*',
 }));
 // view engine setup
-app.set('views', path.join(__dirname, 'app_server', 'views'));
+// app.set('views', path.join(__dirname, 'app_server', 'views'));
 app.set('view engine', 'jade');
 
 // Use the session middleware
-app.use(session({ secret: 'fsla3&fkad(#', cookie: { maxAge: 60000 }}))
+app.use(session({secret: 'fsla3&fkad(#', cookie: {maxAge: 60000}}));
 
 app.use(morgan('combined', {stream: logger.stream}));
 app.use(express.json({limit: '50mb'}));
@@ -53,14 +54,15 @@ app.use(express.urlencoded({limit: '50mb', extended: true, parameterLimit: 50000
 app.use(cookieParser());
 
 // app.use(stylus.middleware(path.join(__dirname, 'public')));
-app.use(express.static(path.join(__dirname, 'public')));
-app.use('/static', express.static(path.join(__dirname, 'storage')));
-app.use(express.static(path.join(__dirname, '/node_modules/bootstrap/dist')));
-app.use(express.static(path.join(__dirname, '/node_modules/jquery/dist')));
-app.use(express.static(path.join(__dirname, '/node_modules/tinymce')));
+// app.use(express.static(path.join(__dirname, 'public')));
+// app.use(express.static(path.join(__dirname, '/node_modules/bootstrap/dist')));
+// app.use(express.static(path.join(__dirname, '/node_modules/jquery/dist')));
+// app.use(express.static(path.join(__dirname, '/node_modules/tinymce')));
 
-app.use('/', indexRouter);
+// app.use('/', indexRouter);
 app.use('/api', apiRouter);
+app.use('/stats', analyticsRouter);
+app.use(express.static(path.join(__dirname, '/storage')));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -75,7 +77,7 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  res.json(err);
 });
 
 // /**

@@ -14,7 +14,7 @@ const mediaGroupSchema = new mongoose.Schema({
   security: {
     type: {
       group: [mongoose.Schema.Types.ObjectId],
-      owner: {type: mongoose.Schema.Types.ObjectId, required: true},
+      owner: {type: mongoose.Schema.Types.ObjectId},
       // directory with 777 permissions
       permissions: {type: String, default: 'd777'},
     },
@@ -28,6 +28,7 @@ const mediaSchema = new mongoose.Schema({
   filename: {type: String, required: true},
   // name to be displayed
   originalname: {type: String, required: true},
+  caption: {type: String},
   mediaGroup: {type: mongoose.Schema.Types.ObjectId, ref: 'MediaGroup'},
   encoding: {type: String},
   mimetype: {type: String},
@@ -48,6 +49,11 @@ const mediaSchema = new mongoose.Schema({
   },
 }, {
   timestamps: true,
+});
+
+mediaSchema.pre('save', function (next) {
+    this.caption = this.get('originalname');
+    next();
 });
 
 module.exports.Media = mongoose.model('Media', mediaSchema);

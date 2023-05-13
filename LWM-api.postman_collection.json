@@ -1,0 +1,1223 @@
+{
+	"info": {
+		"_postman_id": "649cd7e3-7e52-443c-b000-20e5245b2e3a",
+		"name": "LWM-api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Analytics",
+			"item": [
+				{
+					"name": "Posts count",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{livehost}}/stats/posts/count",
+							"host": [
+								"{{livehost}}"
+							],
+							"path": [
+								"stats",
+								"posts",
+								"count"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "New Request",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:3000/stats/posts/count",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"stats",
+										"posts",
+										"count"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "1"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"1-d95o2uzYI7q7tY7bHI4U1xBug7s\""
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 03 Jan 2022 04:11:40 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "3"
+						}
+					]
+				},
+				{
+					"name": "latest post",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/posts/latest",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"posts",
+								"latest"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "latest post",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:3000/api/posts/latest",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"posts",
+										"latest"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "251"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"fb-oVvxuEStPvTDsoGrJuVV5/H4f4k\""
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 03 Jan 2022 04:12:55 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"publish_status\": \"PUBLIC\",\n    \"tags\": [\n        \"new\",\n        \"sak\"\n    ],\n    \"comments\": [],\n    \"_id\": \"61c09345c262c8dc57d44077\",\n    \"title\": \"test tag 2\",\n    \"author\": \"61b18f8e7062f35af7cb1711\",\n    \"body\": \"oka\",\n    \"createdAt\": \"2021-12-20T14:29:25.327Z\",\n    \"updatedAt\": \"2021-12-20T14:29:25.327Z\",\n    \"__v\": 0\n}"
+						}
+					]
+				},
+				{
+					"name": "Media Group Count",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/media-groups/count",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"media-groups",
+								"count"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Media Group Count",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:3000/api/media-groups/count",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"media-groups",
+										"count"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "1"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"1-2kuSN7rMzfGcB2DKt67EqDWQELA\""
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 04 Jan 2022 18:12:15 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "2"
+						}
+					]
+				},
+				{
+					"name": "Media Count",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/media/count",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"media",
+								"count"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Media Count",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:3000/api/media/count",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"media",
+										"count"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "1"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"1-2kuSN7rMzfGcB2DKt67EqDWQELA\""
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 04 Jan 2022 18:12:52 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "2"
+						}
+					]
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Members list",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/members",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"members"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Members list",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/api/members",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"members"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "1141"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"475-MmPsop4OQ9Q0d4BrL2E+oSUawmI\""
+						},
+						{
+							"key": "Date",
+							"value": "Mon, 03 Jan 2022 03:32:52 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"_links\": {\n        \"base\": \"localhost:3000\",\n        \"self\": \"/api/members?start=0&limit=10\",\n        \"prev\": \"/api/members?start=0&limit=10\",\n        \"next\": \"/api/members?start=10&limit=10\"\n    },\n    \"limit\": 10,\n    \"size\": 2,\n    \"start\": 0,\n    \"results\": [\n        {\n            \"profileType\": \"PUBLIC\",\n            \"_id\": \"61b18f8e7062f35af7cb1711\",\n            \"name\": \"Rajan Bajaj\",\n            \"email\": \"rajanbajajkota@gmail.com\",\n            \"password\": \"$argon2i$v=19$m=4096,t=3,p=1$+kiSx2ORSsrP8K/kRkqvww$ynt/IjEoIPKDvyvcKcmKgHQYdMd+W7EOtG9urVuMWhw\",\n            \"gravatar\": \"https://s.gravatar.com/avatar/2ae18119aadc2df06ac4c55d22e20e76?s=100\",\n            \"birthdate\": \"2020-12-31T18:30:00.000Z\",\n            \"country\": \"India\",\n            \"state\": \"\",\n            \"pincode\": 335804,\n            \"createdAt\": \"2021-12-09T05:09:34.136Z\",\n            \"updatedAt\": \"2021-12-09T05:09:34.136Z\",\n            \"__v\": 0\n        },\n        {\n            \"profileType\": \"PUBLIC\",\n            \"_id\": \"61a8995aea8ffc7af1765d81\",\n            \"name\": \"test_user\",\n            \"email\": \"test_user@gmail.com\",\n            \"password\": \"$argon2i$v=19$m=4096,t=3,p=1$427Hguj7tR42tGRDUdIsqg$YXAl+9ebAol3H+S29fAHT/RX3L+FzV3q4v3UAr9ENBc\",\n            \"gravatar\": \"https://s.gravatar.com/avatar/0f2430fc816bf3bfe536ece706f02076?s=100\",\n            \"birthdate\": \"2012-08-11T18:30:00.000Z\",\n            \"country\": \"Other\",\n            \"state\": \"\",\n            \"pincode\": 555553,\n            \"createdAt\": \"2021-12-02T10:00:58.547Z\",\n            \"updatedAt\": \"2021-12-02T10:00:58.547Z\",\n            \"__v\": 0\n        }\n    ]\n}"
+				}
+			]
+		},
+		{
+			"name": "Posts list",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": []
+				},
+				"url": {
+					"raw": "{{host}}/api/posts",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"posts"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Posts list",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "localhost:3000/api/posts",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"posts"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "1111"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"457-YiFEfaFAP7t97DAnbzhaGIN9xas\""
+						},
+						{
+							"key": "Date",
+							"value": "Mon, 03 Jan 2022 04:06:35 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"_links\": {\n        \"base\": \"localhost:3000\",\n        \"self\": \"/api/posts?start=0&limit=10\",\n        \"prev\": \"/api/posts?start=0&limit=10\",\n        \"next\": \"/api/posts?start=10&limit=10\"\n    },\n    \"limit\": 10,\n    \"size\": 3,\n    \"start\": 0,\n    \"results\": [\n        {\n            \"publish_status\": \"PUBLIC\",\n            \"tags\": [\n                \"new\",\n                \"sak\"\n            ],\n            \"comments\": [],\n            \"_id\": \"61c09345c262c8dc57d44077\",\n            \"title\": \"test tag 2\",\n            \"author\": \"61b18f8e7062f35af7cb1711\",\n            \"body\": \"oka\",\n            \"createdAt\": \"2021-12-20T14:29:25.327Z\",\n            \"updatedAt\": \"2021-12-20T14:29:25.327Z\",\n            \"__v\": 0\n        },\n        {\n            \"publish_status\": \"PUBLIC\",\n            \"tags\": [\n                \"new\",\n                \"not\",\n                \"nana\",\n                \"okak\"\n            ],\n            \"comments\": [],\n            \"_id\": \"61c0924fc262c8dc57d4403f\",\n            \"title\": \"test tag\",\n            \"author\": \"61b18f8e7062f35af7cb1711\",\n            \"body\": \"HAN\",\n            \"createdAt\": \"2021-12-20T14:25:19.224Z\",\n            \"updatedAt\": \"2021-12-20T14:26:13.819Z\",\n            \"__v\": 1\n        },\n        {\n            \"publish_status\": \"PUBLIC\",\n            \"tags\": [\n                \"media\",\n                \"photography\"\n            ],\n            \"comments\": [],\n            \"_id\": \"61b18fb87062f35af7cb1717\",\n            \"title\": \"Title 2\",\n            \"author\": \"61b18f8e7062f35af7cb1711\",\n            \"body\": \"<div style=\\\"text-align: justify;\\\">Hello world this is updated post<sup>jwefkfl</sup></div><div style=\\\"text-align: justify;\\\"><sup><br></sup></div>\",\n            \"createdAt\": \"2021-12-09T05:10:16.919Z\",\n            \"updatedAt\": \"2021-12-16T05:42:33.433Z\",\n            \"__v\": 2\n        }\n    ]\n}"
+				}
+			]
+		},
+		{
+			"name": "Posts by id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": []
+				},
+				"url": {
+					"raw": "{{host}}/api/posts/61c0924fc262c8dc57d4403f",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"posts",
+						"61c0924fc262c8dc57d4403f"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Posts by id",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "localhost:3000/api/posts/61c0924fc262c8dc57d4403f",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"posts",
+								"61c0924fc262c8dc57d4403f"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "263"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"107-cpc4kJiyPS7TXUu9YhBqabtwwbc\""
+						},
+						{
+							"key": "Date",
+							"value": "Mon, 03 Jan 2022 04:15:31 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"publish_status\": \"PUBLIC\",\n    \"tags\": [\n        \"new\",\n        \"not\",\n        \"nana\",\n        \"okak\"\n    ],\n    \"comments\": [],\n    \"_id\": \"61c0924fc262c8dc57d4403f\",\n    \"title\": \"test tag\",\n    \"author\": \"61b18f8e7062f35af7cb1711\",\n    \"body\": \"HAN\",\n    \"createdAt\": \"2021-12-20T14:25:19.224Z\",\n    \"updatedAt\": \"2021-12-20T14:26:13.819Z\",\n    \"__v\": 1\n}"
+				}
+			]
+		},
+		{
+			"name": "Posts comments by post id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": []
+				},
+				"url": {
+					"raw": "{{host}}/api/posts/61c0924fc262c8dc57d4403f/comments",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"posts",
+						"61c0924fc262c8dc57d4403f",
+						"comments"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Posts comments by post id",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "localhost:3000/api/posts/61c0924fc262c8dc57d4403f/comments",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"posts",
+								"61c0924fc262c8dc57d4403f",
+								"comments"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "293"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"125-+fAIeLsxmpRuCnra+e9+T5fhwpE\""
+						},
+						{
+							"key": "Date",
+							"value": "Mon, 03 Jan 2022 04:16:31 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"_links\": {\n        \"base\": \"localhost:3000\",\n        \"self\": \"/api/posts/61c0924fc262c8dc57d4403f/comments?start=0&limit=10\",\n        \"prev\": \"/api/posts/61c0924fc262c8dc57d4403f/comments?start=0&limit=10\",\n        \"next\": \"/api/posts/61c0924fc262c8dc57d4403f/comments?start=10&limit=10\"\n    },\n    \"limit\": 10,\n    \"size\": 0,\n    \"start\": 0,\n    \"results\": []\n}"
+				}
+			]
+		},
+		{
+			"name": "Posts reviews by post Id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/posts/61c0924fc262c8dc57d4403f/reviews",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"posts",
+						"61c0924fc262c8dc57d4403f",
+						"reviews"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Posts reviews by post Id",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/api/posts/61c0924fc262c8dc57d4403f/reviews",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"posts",
+								"61c0924fc262c8dc57d4403f",
+								"reviews"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "290"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"122-MQ0+lINrn1OpPVbbS+1ypbGIhjQ\""
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 04 Jan 2022 18:09:45 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"_links\": {\n        \"base\": \"localhost:3000\",\n        \"self\": \"/api/posts/61c0924fc262c8dc57d4403f/reviews?start=0&limit=10\",\n        \"prev\": \"/api/posts/61c0924fc262c8dc57d4403f/reviews?start=0&limit=10\",\n        \"next\": \"/api/posts/61c0924fc262c8dc57d4403f/reviews?start=10&limit=10\"\n    },\n    \"limit\": 10,\n    \"size\": 0,\n    \"start\": 0,\n    \"results\": []\n}"
+				}
+			]
+		},
+		{
+			"name": "Media group list",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/media-groups",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"media-groups"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Media group list",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/api/media-groups",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"media-groups"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "505"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"1f9-z2n1bNPxnKZMV2mvVIVCOkGT4tc\""
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 04 Jan 2022 18:01:14 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"_expandable\": [],\n    \"_links\": {\n        \"base\": \"localhost:3000\",\n        \"self\": \"/api/media-group?start=0&limit=10\",\n        \"prev\": \"/api/media-group?start=0&limit=10\",\n        \"next\": \"/api/media-group?start=10&limit=10\"\n    },\n    \"limit\": 10,\n    \"size\": 1,\n    \"start\": 0,\n    \"results\": [\n        {\n            \"_id\": \"61b22faa7062f35af7cb1785\",\n            \"name\": \"Rajan\",\n            \"path\": \"/video/\",\n            \"attributes\": {\n                \"readOnly\": false,\n                \"hidden\": false\n            },\n            \"security\": {\n                \"group\": [],\n                \"owner\": \"61b18f8e7062f35af7cb1711\",\n                \"permissions\": \"d777\"\n            },\n            \"createdAt\": \"2021-12-09T16:32:42.153Z\",\n            \"updatedAt\": \"2021-12-09T16:32:42.153Z\",\n            \"__v\": 0\n        }\n    ]\n}"
+				}
+			]
+		},
+		{
+			"name": "Media group by id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/media-groups/61b22faa7062f35af7cb1785",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"media-groups",
+						"61b22faa7062f35af7cb1785"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Media list",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/media",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"media"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Media list",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/api/media",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"media"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "695"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"2b7-UxItPkuwH1HxYSG84G6aV9gvzGM\""
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 04 Jan 2022 18:05:23 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"_expandable\": [],\n    \"_links\": {\n        \"base\": \"localhost:3000\",\n        \"self\": \"/api/media?start=0&limit=10\",\n        \"prev\": \"/api/media?start=0&limit=10\",\n        \"next\": \"/api/media?start=10&limit=10\"\n    },\n    \"limit\": 10,\n    \"size\": 1,\n    \"start\": 0,\n    \"results\": [\n        {\n            \"_id\": \"61b22fc47062f35af7cb178b\",\n            \"filename\": \"1639067588033_194838590_Clips21-12-08_07-07.mov\",\n            \"originalname\": \"Clips21-12-08_07-07.mov\",\n            \"mediaGroup\": \"61b22faa7062f35af7cb1785\",\n            \"encoding\": \"7bit\",\n            \"mimetype\": \"video/quicktime\",\n            \"size\": 8101889,\n            \"attributes\": {\n                \"readOnly\": false,\n                \"hidden\": false\n            },\n            \"security\": {\n                \"group\": [],\n                \"owner\": \"61b18f8e7062f35af7cb1711\",\n                \"permissions\": \"-777\"\n            },\n            \"createdAt\": \"2021-12-09T16:33:08.186Z\",\n            \"updatedAt\": \"2021-12-09T16:33:08.186Z\",\n            \"caption\": \"Clips21-12-08_07-07.mov\",\n            \"__v\": 0\n        }\n    ]\n}"
+				}
+			]
+		},
+		{
+			"name": "Media by media group id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/61b22faa7062f35af7cb1785/media",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"61b22faa7062f35af7cb1785",
+						"media"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Media byu media group id",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/api/61b22faa7062f35af7cb1785/media",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"61b22faa7062f35af7cb1785",
+								"media"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "936"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"3a8-B6SSAsiGeipGu3q2490m85Q6PvE\""
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 04 Jan 2022 18:07:09 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"_expandable\": [],\n    \"_links\": {\n        \"base\": \"http://localhost:3000\",\n        \"self\": \"http://localhost:3000/api/61b22faa7062f35af7cb1785/media?start=0&limit=10\",\n        \"prev\": \"http://localhost:3000/api/61b22faa7062f35af7cb1785/media?start=0&limit=10\",\n        \"next\": \"http://localhost:3000/api/61b22faa7062f35af7cb1785/media?start=10&limit=10\"\n    },\n    \"limit\": 10,\n    \"size\": 1,\n    \"start\": 0,\n    \"results\": [\n        {\n            \"_embedded\": \"http://localhost:3000/video/Rajan/1639067588033_194838590_Clips21-12-08_07-07.mov\",\n            \"_id\": \"61b22fc47062f35af7cb178b\",\n            \"filename\": \"1639067588033_194838590_Clips21-12-08_07-07.mov\",\n            \"originalname\": \"Clips21-12-08_07-07.mov\",\n            \"mediaGroup\": \"61b22faa7062f35af7cb1785\",\n            \"encoding\": \"7bit\",\n            \"mimetype\": \"video/quicktime\",\n            \"size\": 8101889,\n            \"attributes\": {\n                \"readOnly\": false,\n                \"hidden\": false\n            },\n            \"security\": {\n                \"group\": [],\n                \"owner\": \"61b18f8e7062f35af7cb1711\",\n                \"permissions\": \"-777\"\n            },\n            \"createdAt\": \"2021-12-09T16:33:08.186Z\",\n            \"updatedAt\": \"2021-12-09T16:33:08.186Z\",\n            \"caption\": \"Clips21-12-08_07-07.mov\",\n            \"__v\": 0\n        }\n    ]\n}"
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{access_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"const tokenUrl = pm.variables.get('host')+'/api/login';",
+					"let clientId = \"\";",
+					"let clientSecret = \"\";",
+					"if(pm.variables.get('host') !== \"localhost:3000\") {",
+					"    clientId = 'api@lwm.com';",
+					"    clientSecret = 'api@lwm.com';",
+					"} else {",
+					"    clientId = 'x@x.com';",
+					"    clientSecret = 'x';",
+					"}",
+					"",
+					"const getTokenRequest = {",
+					"  method: 'POST',",
+					"  url: tokenUrl,",
+					"  body: {",
+					"    mode: 'urlencoded',",
+					"    urlencoded: [",
+					"        { key: 'email', value: clientId },",
+					"        { key: 'password', value: clientSecret }",
+					"      ]",
+					"  }",
+					"};",
+					"",
+					"",
+					"pm.sendRequest(getTokenRequest, (err, response) => {",
+					"  const jsonResponse = response.json();",
+					"  const newAccessToken = jsonResponse.accessToken;",
+					"  pm.variables.set('access_token', newAccessToken);",
+					"});"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "localhost",
+			"value": "localhost:3000",
+			"disabled": true
+		},
+		{
+			"key": "livehost",
+			"value": "https://learndottogether.herokuapp.com",
+			"disabled": true
+		},
+		{
+			"key": "host",
+			"value": "https://learndottogether.herokuapp.com"
+		}
+	]
+}

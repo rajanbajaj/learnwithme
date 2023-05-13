@@ -1,0 +1,48 @@
+{
+	"all": {
+		"post": {
+			"create": "create",
+			"update": "update",
+			"read": "read",
+			"delete": "delete",
+			"comment": {
+				"create": "create",
+				"update": "update",
+				"read": "read",
+				"delete": "delete"
+			},
+			"like": {
+				"update": "update",
+				"read": "read",
+			},
+			"bookmark": {
+				"update": "update",
+				"read": "read",
+			},
+			"review": {
+				"create": "create",
+				"update": "update",
+				"read": "read",
+				"delete": "delete"
+			},
+		},
+		"member": {
+			"create": "create",
+			"update": "update",
+			"read": "read",
+			"delete": "delete"
+		},
+		"mediaGroup": {
+			"create": "create",
+			"update": "update",
+			"read": "read",
+			"delete": "delete"
+		},
+		"media": {
+			"create": "create",
+			"update": "update",
+			"read": "read",
+			"delete": "delete"
+		}
+	}
+}
